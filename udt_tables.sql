@@ -39,12 +39,11 @@ CREATE TABLE Turista OF turista_t (
   username            NOT NULL,
   CHECK (apellido LIKE '^[a-zA-Z]{1,20}'),                      --String valido
   CHECK (contrasena LIKE '^[a-zA-Z]{1,8}'),                     --String valido
-  CHECK (fechaRegistro <= SYSDATE()),                        --fechaRegistro menor o igual que fecha actual
+  CHECK (fechaRegistro <= SYSDATE()),                           --fechaRegistro menor o igual que fecha actual
   CHECK (genero IN ('Hombre', 'Mujer')),                   
   CHECK (mail LIKE '([\w-\.]+)@((?:[\w]+\.)+)([a-zA-Z]{2,4})'), --Mail valido
   CHECK (nombre LIKE '^[a-zA-Z]{1,20}'),                        --String valido
   CHECK (username LIKE '^[a-zA-Z]{1,20}')                       --String valido
-  
 ) NESTED TABLE tipoHitosPreferidos STORE AS turista_hitos;
 
 CREATE TABLE Hito OF hito_t (
@@ -53,7 +52,6 @@ CREATE TABLE Hito OF hito_t (
   temperatura NOT NULL,
   vestimenta  NOT NULL,
   CHECK (estado IN ('Abierto'), 'Cerrado Permanentemente', 'Cerrado Temporalmente')
-
 ) NESTED TABLE pago STORE AS hito_pago 
   NESTED TABLE categoria STORE AS hito_categoria;
 
@@ -67,7 +65,6 @@ CREATE TABLE Servicio OF servicio_t (
   CHECK (estado IN ('Disponible', 'No Disponible')),
   CHECK (dia IN ('Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo')),
   CHECK (fechaInicio <= fechaFin)
-
 ) NESTED TABLE costo STORE AS servicio_costo
   NESTED TABLE informacionContacto STORE AS servicio_informacion
   NESTED TABLE tipo STORE AS servicio_tipo;
@@ -86,5 +83,4 @@ CREATE TABLE Ruta OF ruta_t (
   nombre              NOT NULL,
   CHECK (fechaRegistro <= SYSDATE()),       --fechaRegistro menor o igual que fecha actual
   CHECK (nombre LIKE '^[a-zA-Z]{1,20}')     --String valido
-
 ) NESTED TABLE tipo STORE AS ruta_tipoHito;
