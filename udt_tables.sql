@@ -21,6 +21,7 @@ EXCEPTION
          RAISE;
       END IF;
 END;
+/
 
 CREATE TABLE Turista OF turista_t (
   activo              NOT NULL,
