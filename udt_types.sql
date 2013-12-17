@@ -99,6 +99,7 @@ CREATE OR REPLACE TYPE lista_dias_t AS VARRAY(7) of VARCHAR2(10);
 
 -- Tipo que es una tabla de referencias a idiomas
 CREATE OR REPLACE TYPE tabla_tipoServicio_t AS TABLE of VARCHAR2(20);
+/
 
 -- Tipo para servicio
 CREATE OR REPLACE TYPE servicio_t UNDER destino_t (
