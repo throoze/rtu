@@ -33,7 +33,14 @@ CREATE TABLE Turista OF turista_t (
   genero              NOT NULL,
   mail                NOT NULL,
   nombre              NOT NULL,
-  username            NOT NULL
+  username            NOT NULL,
+  CHECK (apellido LIKE '^[a-zA-Z]{1,20}'),                      --String valido
+  CHECK (contrasena LIKE '^[a-zA-Z]{1,8}'),                     --String valido
+  CHECK (fechaRegistro <= CURRENT_DATE),                        --fechaRegistro menor o igual que fecha actual
+  CHECK (genero IN ('Hombre', 'Mujer')),                   
+  CHECK (mail LIKE '([\w-\.]+)@((?:[\w]+\.)+)([a-zA-Z]{2,4})'), --Mail valido
+  CHECK (nombre LIKE '^[a-zA-Z]{1,20}'),                        --String valido
+  CHECK (username LIKE '^[a-zA-Z]{1,20}')                       --String valido
 ) NESTED TABLE tipoHitosPreferidos STORE AS turista_hitos;
 
 CREATE TABLE Hito OF hito_t (
