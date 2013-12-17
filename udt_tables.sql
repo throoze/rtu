@@ -12,13 +12,16 @@
 
 -- Drop para tablas
 BEGIN
-	-- Colocar aqui todos los drops de la forma:
-	-- EXECUTE IMMEDIATE 'DROP TABLE <nombre_de_la_tabla>';
-	EXECUTE IMMEDIATE 'DROP TABLE Turista';
-  EXECUTE IMMEDIATE 'DROP TABLE Hito';
-  EXECUTE IMMEDIATE 'DROP TABLE Servicio';
+    -- Colocar aqui todos los drops de la forma:
+    -- EXECUTE IMMEDIATE 'DROP TABLE <nombre_de_la_tabla>';
+    EXECUTE IMMEDIATE 'DROP TABLE Turista';
+    EXECUTE IMMEDIATE 'DROP TABLE Hito';
+    EXECUTE IMMEDIATE 'DROP TABLE Servicio';
+    EXECUTE IMMEDIATE 'DROP TABLE Guia';
+    EXECUTE IMMEDIATE 'DROP TABLE Destino';
+    EXECUTE IMMEDIATE 'DROP TABLE Ruta';
 EXCEPTION
-	WHEN OTHERS THEN
+    WHEN OTHERS THEN
       IF SQLCODE != -942 THEN
          RAISE;
       END IF;
@@ -61,3 +64,17 @@ CREATE TABLE Servicio OF servicio_t (
 ) NESTED TABLE costo STORE AS servicio_costo
   NESTED TABLE informacionContacto STORE AS servicio_informacion
   NESTED TABLE tipo STORE AS servicio_tipo;
+
+CREATE TABLE Guia OF guia_t () 
+NESTED TABLE idiomas STORE AS guia_idiomas
+NESTED TABLE telefonos STORE AS guia_telefonos;
+
+CREATE TABLE Destino OF destino_t (
+  descripcion         NOT NULL,
+  nombre              NOT NULL
+);
+
+CREATE TABLE Ruta OF ruta_t (
+  fechaRegistro       NOT NULL,
+  nombre              NOT NULL,
+) NESTED TABLE tipo STORE AS ruta_tipoHito;
