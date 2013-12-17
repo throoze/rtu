@@ -10,6 +10,18 @@
 
  -- Tables
 
+-- Drop para tablas
+BEGIN
+	EXECUTE IMMEDIATE 'DROP TABLE Turista';
+	EXECUTE IMMEDIATE 'DROP TABLE Hito';
+	EXECUTE IMMEDIATE 'DROP TABLE NON_EXISTENT_TABLE';
+EXCEPTION
+	WHEN OTHERS THEN
+      IF SQLCODE != -942 THEN
+         RAISE;
+      END IF;
+END;
+
 CREATE TABLE Turista OF turista_t (
   activo              NOT NULL,
   apellido            NOT NULL,

@@ -30,10 +30,6 @@ DROP TYPE servicio_t FORCE;
 DROP TYPE hito_t FORCE;
 DROP TYPE ruta_t FORCE;
 
--- Drop para tablas
-DROP TABLE Turista;
-DROP TABLE Hito;
-
 
 -- Tipo que es una tabla de referencias a tipos de hito
 CREATE OR REPLACE TYPE tabla_tipoHito_t AS TABLE of VARCHAR2(20);
