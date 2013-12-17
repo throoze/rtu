@@ -12,20 +12,24 @@
 
 -- Tipo de datos
 
-DROP TYPE tabla_tipoHito FORCE;
-DROP TYPE tabla_idiomas FORCE;
-DROP TYPE tabla_telefonos FORCE;
-DROP TYPE turista FORCE;
-DROP TYPE guia FORCE;
-DROP TYPE destino FORCE;
-DROP TYPE costo FORCE;
-DROP TYPE tabla_costo FORCE;
-DROP TYPE informacion FORCE;
-DROP TYPE tabla_informacion FORCE;
-DROP TYPE lista_dias FORCE;
-DROP TYPE servicio FORCE;
-DROP TYPE hito FORCE;
-DROP TYPE ruta FORCE;
+DROP TYPE tabla_tipoHito_t FORCE;
+DROP TYPE tabla_idiomas_t FORCE;
+DROP TYPE tabla_telefonos_t FORCE;
+DROP TYPE turista_t FORCE;
+DROP TYPE guia_t FORCE;
+DROP TYPE destino_t FORCE;
+DROP TYPE costo_t FORCE;
+DROP TYPE tabla_costo_t FORCE;
+DROP TYPE informacion_t FORCE;
+DROP TYPE tabla_informacion_t FORCE;
+DROP TYPE lista_dias_t FORCE;
+DROP TYPE servicio_t FORCE;
+DROP TYPE hito_t FORCE;
+DROP TYPE ruta_t FORCE;
+
+-- Drop para tablas
+DROP TABLE Turista;
+DROP TABLE Hito;
 
 
 -- Tipo que es una tabla de referencias a tipos de hito
@@ -126,3 +130,22 @@ CREATE OR REPLACE TYPE ruta_t AS OBJECT (
   creador        REF turista_t
 );
 /
+
+CREATE TABLE Turista OF turista_t (
+  activo              NOT NULL,
+  apellido            NOT NULL,
+  contrasena          NOT NULL,
+  fechaRegistro       NOT NULL,
+  genero              NOT NULL,
+  mail                NOT NULL,
+  nombre              NOT NULL,
+  username            NOT NULL
+) NESTED TABLE tipoHitosPreferidos STORE AS turista_hitos;
+
+CREATE TABLE Hito OF hito_t (
+  estado      NOT NULL,
+  vestimenta  NOT NULL,
+  publico     NULL,
+  temperatura NULL,
+) NESTED TABLE pago STORE AS hito_pago;
+  NESTED TABLE categoria STORE AS hito_categoria;
