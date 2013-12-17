@@ -16,6 +16,7 @@ BEGIN
 	-- EXECUTE IMMEDIATE 'DROP TABLE <nombre_de_la_tabla>';
 	EXECUTE IMMEDIATE 'DROP TABLE Turista';
   EXECUTE IMMEDIATE 'DROP TABLE Hito';
+  EXECUTE IMMEDIATE 'DROP TABLE Servicio';
 EXCEPTION
 	WHEN OTHERS THEN
       IF SQLCODE != -942 THEN
@@ -40,4 +41,16 @@ CREATE TABLE Hito OF hito_t (
   publico     NULL,
   temperatura NOT NULL,
   vestimenta  NOT NULL
-) NESTED TABLE pago STORE AS hito_pago NESTED TABLE categoria STORE AS hito_categoria;
+) NESTED TABLE pago STORE AS hito_pago 
+  NESTED TABLE categoria STORE AS hito_categoria;
+
+CREATE TABLE Servicio OF servicio_t (
+  estado              NOT NULL,              
+  duracion            NULL,
+  fechaInicio         NULL,
+  fechaFin            NULL,
+  horaComienzo        NOT NULL,
+  dia                 NULL
+) NESTED TABLE costo STORE AS servicio_costo
+  NESTED TABLE informacionContacto STORE AS servicio_informacion
+  NESTED TABLE tipo STORE AS servicio_tipo;
