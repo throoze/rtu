@@ -30,6 +30,7 @@ DROP TYPE ruta_t FORCE;
 -- Drop para tablas
 DROP TABLE Turista;
 DROP TABLE Hito;
+DROP TABLE Servicio;
 
 
 -- Tipo que es una tabla de referencias a tipos de hito
@@ -97,12 +98,16 @@ CREATE OR REPLACE TYPE tabla_informacion_t AS TABLE of REF informacion_t;
 CREATE OR REPLACE TYPE lista_dias_t AS VARRAY(7) of VARCHAR2(10);
 /
 
+-- Tipo que es una tabla de referencias a idiomas
+CREATE OR REPLACE TYPE tabla_tipoServicio_t AS TABLE of VARCHAR2(20);
+/
+
 -- Tipo para servicio
 CREATE OR REPLACE TYPE servicio_t UNDER destino_t (
   costo               tabla_costo_t,
   estado              VARCHAR2(13),
   informacionContacto tabla_informacion_t,
-  tipo                VARCHAR2(20),
+  tipo                tabla_tipoServicio_t,
   dia                 lista_dias_t,
   duracion            DATE,
   fechaInicio         DATE,
@@ -144,8 +149,19 @@ CREATE TABLE Turista OF turista_t (
 
 CREATE TABLE Hito OF hito_t (
   estado      NOT NULL,
-  vestimenta  NOT NULL,
   publico     NULL,
-  temperatura NULL,
-) NESTED TABLE pago STORE AS hito_pago;
+  temperatura NOT NULL,
+  vestimenta  NOT NULL
+) NESTED TABLE pago STORE AS hito_pago 
   NESTED TABLE categoria STORE AS hito_categoria;
+
+CREATE TABLE Servicio OF servicio_t (
+  estado              NOT NULL,              
+  duracion            NULL,
+  fechaInicio         NULL,
+  fechaFin            NULL,
+  horaComienzo        NOT NULL,
+  dia                 NULL
+) NESTED TABLE costo STORE AS servicio_costo
+  NESTED TABLE informacionContacto STORE AS servicio_informacion
+  NESTED TABLE tipo STORE AS servicio_tipo;
