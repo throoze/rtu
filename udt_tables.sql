@@ -44,13 +44,16 @@ CREATE TABLE Turista OF turista_t (
   CHECK (mail LIKE '([\w-\.]+)@((?:[\w]+\.)+)([a-zA-Z]{2,4})'), --Mail valido
   CHECK (nombre LIKE '^[a-zA-Z]{1,20}'),                        --String valido
   CHECK (username LIKE '^[a-zA-Z]{1,20}')                       --String valido
+  
 ) NESTED TABLE tipoHitosPreferidos STORE AS turista_hitos;
 
 CREATE TABLE Hito OF hito_t (
   estado      NOT NULL,
   publico     NULL,
   temperatura NOT NULL,
-  vestimenta  NOT NULL
+  vestimenta  NOT NULL,
+  CHECK (estado IN ('Abierto'), 'Cerrado Permanentemente', 'Cerrado Temporalmente')
+
 ) NESTED TABLE pago STORE AS hito_pago 
   NESTED TABLE categoria STORE AS hito_categoria;
 
@@ -60,7 +63,11 @@ CREATE TABLE Servicio OF servicio_t (
   fechaInicio         NULL,
   fechaFin            NULL,
   horaComienzo        NOT NULL,
-  dia                 NULL
+  dia                 NULL,
+  CHECK (estado IN ('Disponible', 'No Disponible')),
+  CHECK (dia IN ('Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo')),
+  CHECK (fechaInicio <= fechaFin)
+
 ) NESTED TABLE costo STORE AS servicio_costo
   NESTED TABLE informacionContacto STORE AS servicio_informacion
   NESTED TABLE tipo STORE AS servicio_tipo;
@@ -77,4 +84,7 @@ CREATE TABLE Destino OF destino_t (
 CREATE TABLE Ruta OF ruta_t (
   fechaRegistro       NOT NULL,
   nombre              NOT NULL,
+  CHECK (fechaRegistro <= SYSDATE()),       --fechaRegistro menor o igual que fecha actual
+  CHECK (nombre LIKE '^[a-zA-Z]{1,20}')     --String valido
+
 ) NESTED TABLE tipo STORE AS ruta_tipoHito;
