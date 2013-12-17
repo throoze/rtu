@@ -39,7 +39,7 @@ CREATE TABLE Turista OF turista_t (
   username            NOT NULL,
   CHECK (apellido LIKE '^[a-zA-Z]{1,20}'),                      --String valido
   CHECK (contrasena LIKE '^[a-zA-Z]{1,8}'),                     --String valido
-  CHECK (fechaRegistro <= SYSDATE()),                           --fechaRegistro menor o igual que fecha actual
+  CHECK (fechaRegistro <= (SELECT CURRENT_DATE FROM dual)),                           --fechaRegistro menor o igual que fecha actual
   CHECK (genero IN ('Hombre', 'Mujer')),                   
   CHECK (mail LIKE '([\w-\.]+)@((?:[\w]+\.)+)([a-zA-Z]{2,4})'), --Mail valido
   CHECK (nombre LIKE '^[a-zA-Z]{1,20}'),                        --String valido
@@ -51,7 +51,7 @@ CREATE TABLE Hito OF hito_t (
   publico     NULL,
   temperatura NOT NULL,
   vestimenta  NOT NULL,
-  CHECK (estado IN ('Abierto'), 'Cerrado Permanentemente', 'Cerrado Temporalmente')
+  CHECK (estado IN ('Abierto', 'Cerrado Permanentemente', 'Cerrado Temporalmente'))
 ) NESTED TABLE pago STORE AS hito_pago 
   NESTED TABLE categoria STORE AS hito_categoria;
 
