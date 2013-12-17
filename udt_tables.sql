@@ -81,6 +81,6 @@ CREATE TABLE Destino OF destino_t (
 CREATE TABLE Ruta OF ruta_t (
   fechaRegistro       NOT NULL,
   nombre              NOT NULL,
-  CHECK (fechaRegistro <= SYSDATE()),       --fechaRegistro menor o igual que fecha actual
+  CHECK (fechaRegistro <= (SELECT CURRENT_DATE FROM dual)),       --fechaRegistro menor o igual que fecha actual
   CHECK (nombre LIKE '^[a-zA-Z]{1,20}')     --String valido
 ) NESTED TABLE tipo STORE AS ruta_tipoHito;
