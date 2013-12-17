@@ -15,6 +15,7 @@ BEGIN
 	-- Colocar aqui todos los drops de la forma:
 	-- EXECUTE IMMEDIATE 'DROP TABLE <nombre_de_la_tabla>';
 	EXECUTE IMMEDIATE 'DROP TABLE Turista';
+  EXECUTE IMMEDIATE 'DROP TABLE Hito';
 EXCEPTION
 	WHEN OTHERS THEN
       IF SQLCODE != -942 THEN
@@ -33,3 +34,10 @@ CREATE TABLE Turista OF turista_t (
   nombre              NOT NULL,
   username            NOT NULL
 ) NESTED TABLE tipoHitosPreferidos STORE AS turista_hitos;
+
+CREATE TABLE Hito OF hito_t (
+  estado      NOT NULL,
+  publico     NULL,
+  temperatura NOT NULL,
+  vestimenta  NOT NULL
+) NESTED TABLE pago STORE AS hito_pago NESTED TABLE categoria STORE AS hito_categoria;
