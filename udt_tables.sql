@@ -12,9 +12,9 @@
 
 -- Drop para tablas
 BEGIN
+	-- Colocar aqui todos los drops de la forma:
+	-- EXECUTE IMMEDIATE 'DROP TABLE <nombre_de_la_tabla>';
 	EXECUTE IMMEDIATE 'DROP TABLE Turista';
-	EXECUTE IMMEDIATE 'DROP TABLE Hito';
-	EXECUTE IMMEDIATE 'DROP TABLE NON_EXISTENT_TABLE';
 EXCEPTION
 	WHEN OTHERS THEN
       IF SQLCODE != -942 THEN
