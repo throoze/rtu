@@ -116,7 +116,7 @@ CREATE OR REPLACE TYPE servicio_t UNDER destino_t (
 /
 
 -- Tipo para hito
-CREATE OR REPLACE TYPE hito_t AS OBJECT (
+CREATE OR REPLACE TYPE hito_t UNDER destino_t (
   categoria   tabla_tipoHito_t,
   estado      VARCHAR2(30),
   pago        tabla_costo_t,
