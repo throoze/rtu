@@ -63,7 +63,7 @@ CREATE TABLE Servicio OF servicio_t (
   horaComienzo        NOT NULL,
   dia                 NULL,
   CHECK (estado IN ('Disponible', 'No Disponible')),
-  CHECK (dia IN ('Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo')),
+  CHECK (dia IN ('Lunes','Martes','Miercoles','Jueves','Viernes','Sabado')),
   CHECK (fechaInicio <= fechaFin)
 ) NESTED TABLE costo STORE AS servicio_costo
   NESTED TABLE informacionContacto STORE AS servicio_informacion
