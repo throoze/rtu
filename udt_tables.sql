@@ -137,7 +137,7 @@ CREATE TABLE Servicio OF servicio_t (
 CREATE TABLE Destino OF destino_t (
   descripcion         NOT NULL,
   nombre              NOT NULL,
-  CONSTRAINT PK_DESTINO PRIMARY KEY (nombre),
+  CONSTRAINT PK_DESTINO PRIMARY KEY (nombre)
 );
 
 CREATE TABLE Ruta OF ruta_t (
