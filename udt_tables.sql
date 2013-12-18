@@ -38,13 +38,13 @@ CREATE TABLE Turista OF turista_t (
   nombre              NOT NULL,
   username            NOT NULL,
   CONSTRAINT PK_TURISTA PRIMARY KEY (username),
-  CHECK (apellido LIKE '^[a-zA-Z]{1,20}'),                      --String valido
-  CHECK (contrasena LIKE '^[a-zA-Z]{1,8}'),                     --String valido
-  -- CHECK (fechaRegistro <= (SELECT CURRENT_DATE FROM dual)),                           --fechaRegistro menor o igual que fecha actual
-  CHECK (genero IN ('Hombre', 'Mujer')),                   
-  CHECK (mail LIKE '([\w-\.]+)@((?:[\w]+\.)+)([a-zA-Z]{2,4})'), --Mail valido
-  CHECK (nombre LIKE '^[a-zA-Z]{1,20}'),                        --String valido
-  CHECK (username LIKE '^[a-zA-Z]{1,20}')                       --String valido
+  CONSTRAINT C_TURISTA_APELLIDO CHECK (apellido LIKE '^[a-zA-Z]{1,20}'),                  --String valido
+  CONSTRAINT C_TURISTA_CONTRASENA CHECK (contrasena LIKE '^[a-zA-Z]{1,8}'),               --String valido
+  -- CONSTRAINT C_TURISTA_ CHECK (fechaRegistro <= (SELECT CURRENT_DATE FROM dual)),      --fechaRegistro menor o igual que fecha actual
+  CONSTRAINT C_TURISTA_GENERO CHECK (genero IN ('Hombre', 'Mujer')),                   
+  CONSTRAINT C_TURISTA_MAIL CHECK (mail LIKE '([\w-\.]+)@((?:[\w]+\.)+)([a-zA-Z]{2,4})'), --Mail valido
+  CONSTRAINT C_TURISTA_NOMBRE CHECK (nombre LIKE '^[a-zA-Z]{1,20}'),                      --String valido
+  CONSTRAINT C_TURISTA_USERNAME CHECK (username LIKE '^[a-zA-Z]{1,20}')                   --String valido
 ) NESTED TABLE tipoHitosPreferidos STORE AS turista_hitos;
 
 CREATE TABLE Hito OF hito_t (
@@ -52,7 +52,7 @@ CREATE TABLE Hito OF hito_t (
   publico     NULL,
   temperatura NOT NULL,
   vestimenta  NOT NULL,
-  CHECK (estado IN ('Abierto', 'Cerrado Permanentemente', 'Cerrado Temporalmente'))
+  CONSTRAINT C_HITO_ESTADO CHECK (estado IN ('Abierto', 'Cerrado Permanentemente', 'Cerrado Temporalmente'))
 ) NESTED TABLE pago STORE AS hito_pago 
   NESTED TABLE categoria STORE AS hito_categoria;
 
@@ -63,8 +63,8 @@ CREATE TABLE Servicio OF servicio_t (
   fechaFin            NULL,
   horaComienzo        NOT NULL,
   dia                 NULL,
-  CHECK (estado IN ('Disponible', 'No Disponible')),
-  CHECK (fechaInicio <= fechaFin)
+  CONSTRAINT C_SERVICIO_ESTADO CHECK (estado IN ('Disponible', 'No Disponible')),
+  CONSTRAINT C_SERVICIO_FECHAS CHECK (fechaInicio <= fechaFin)
 ) NESTED TABLE costo STORE AS servicio_costo
   NESTED TABLE informacionContacto STORE AS servicio_informacion
   NESTED TABLE tipo STORE AS servicio_tipo;
@@ -77,8 +77,8 @@ CREATE TABLE Destino OF destino_t (
 CREATE TABLE Ruta OF ruta_t (
   fechaRegistro       NOT NULL,
   nombre              NOT NULL,
-  -- CHECK (fechaRegistro <= (SELECT CURRENT_DATE FROM dual)),       --fechaRegistro menor o igual que fecha actual
-  CHECK (nombre LIKE '^[a-zA-Z]{1,20}')     --String valido
+  -- CONSTRAINT C_RUTA_FECHA_REGISTRO CHECK (fechaRegistro <= (SELECT CURRENT_DATE FROM dual)),       --fechaRegistro menor o igual que fecha actual
+  CONSTRAINT C_RUTA_FECHA_REGISTRO CHECK (nombre LIKE '^[a-zA-Z]{1,20}')     --String valido
 ) NESTED TABLE tipo STORE AS ruta_tipoHito;
 
 CREATE TABLE Guia OF guia_t (
