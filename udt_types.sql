@@ -29,6 +29,7 @@ DROP TYPE lista_dias_t FORCE;
 DROP TYPE servicio_t FORCE;
 DROP TYPE hito_t FORCE;
 DROP TYPE ruta_t FORCE;
+DROP TYPE tabla_ruta_t FORCE;
 DROP TYPE tabla_tipoServicio_t FORCE;
 
 
@@ -54,7 +55,11 @@ CREATE OR REPLACE TYPE turista_t AS OBJECT (
   mail                VARCHAR2(30),
   tipoHitosPreferidos tabla_tipoHito_t,
   nombre              VARCHAR2(30),
-  username            VARCHAR2(20)
+  username            VARCHAR2(20),
+  MEMBER FUNCTION buscarRutas() RETURN tabla_ruta_t,
+  MEMBER FUNCTION calcularExperiencia() RETURN NUMBER --Argumento de entrada es Evaluable pero dicha 
+                                                      --tabla no esta creada puesto que no forma 
+                                                      --parte de nuestro subconjunto
 ) NOT FINAL;
 /
 
@@ -131,6 +136,15 @@ CREATE OR REPLACE TYPE ruta_t AS OBJECT (
   fechaRegistro  DATE,
   nombre         VARCHAR2(30),
   tipo           tabla_tipoHito_t,
-  creador        REF turista_t
+  creador        REF turista_t,
+  MEMBER FUNCTION calcularCostoTotal(costosGuia IN tabla_costo_t, costoHito IN tabla_costo_t) RETURN NUMBER,
+  MEMBER FUNCTION calcularDistanciaTotal() RETURN NUMBER    --Argumento de entrada es Vias pero dicha 
+                                                            --tabla no esta creada puesto que no forma 
+                                                            --parte de nuestro subconjunto
 );
+/
+
+--Tipo que es una tabla de referencias a rutas para ser usado en 
+--la operacion buscarRutas()
+CREATE OR REPLACE TYPE tabla_ruta_t AS TABLE of REF ruta_t;
 /
