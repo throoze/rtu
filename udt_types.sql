@@ -94,7 +94,7 @@ CREATE OR REPLACE TYPE informacion_t AS OBJECT (
 CREATE OR REPLACE TYPE tabla_informacion_t AS TABLE of REF informacion_t;
 /
 
-CREATE OR REPLACE TYPE lista_dias_t AS VARRAY(8) of VARCHAR2(10);
+CREATE OR REPLACE TYPE lista_dias_t AS VARRAY(7) of VARCHAR2(10);
 /
 
 -- Tipo que es una tabla de referencias a idiomas
