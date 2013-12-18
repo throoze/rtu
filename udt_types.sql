@@ -59,10 +59,8 @@ CREATE OR REPLACE TYPE turista_t AS OBJECT (
   tipoHitosPreferidos tabla_tipoHito_t,
   nombre              VARCHAR2(30),
   username            VARCHAR2(20),
-  --MEMBER FUNCTION buscarRutas() RETURN tabla_ruta_t,
-  METHOD buscarRutas() RETURNS tabla_ruta_t,
-  --MEMBER FUNCTION calcularExperiencia() RETURN NUMBER 
-  METHOD calcularExperiencia() RETURNS NUMBER
+  MEMBER FUNCTION buscarRutas RETURN tabla_ruta_t,
+  MEMBER FUNCTION calcularExperiencia RETURN NUMBER
   --Argumento de entrada es Evaluable pero dicha tabla no esta creada puesto que no forma parte de nuestro subconjunto.
 ) NOT FINAL;
 /
@@ -141,23 +139,21 @@ CREATE OR REPLACE TYPE ruta_t AS OBJECT (
   nombre         VARCHAR2(30),
   tipo           tabla_tipoHito_t,
   creador        REF turista_t,
-  --MEMBER FUNCTION calcularCostoTotal(costosGuia IN tabla_costo_t, costoHito IN tabla_costo_t) RETURN NUMBER,
-  METHOD calcularCostoTotal(costosGuia tabla_costo_t, costoHito tabla_costo_t) RETURNs NUMBER,
+  MEMBER FUNCTION calcularCostoTotal(costosGuia IN tabla_costo_t, costoHito IN tabla_costo_t) RETURN NUMBER,
   --Método que calcula el costo total, dada la lista de costos del Guía y la lista de costos de los hitos.
-  --MEMBER FUNCTION calcularDistanciaTotal() RETURN NUMBER, 
-  METHOD calcularDistanciaTotal() RETURNS NUMBER, 
+  MEMBER FUNCTION calcularDistanciaTotal RETURN NUMBER,
   -- Argumento de entrada es Vias pero dicha tabla no esta creada, puesto que no forma parte de nuestro subconjunto.
-  METHOD guiasDisponibles() RETURNS guia_t,
+  MEMBER FUNCTION guiasDisponibles RETURN guia_t,
   -- Método para obtener los guías que están disponibles para dirigir esta ruta.
-  METHOD guiasQueCondujeron() RETURNS guia_t,
+  MEMBER FUNCTION guiasQueCondujeron RETURN guia_t,
   -- Método que devuelve todos los guías que han conducido esta ruta alguna vez.
-  METHOD guiasPorFecha(f DATE) RETURNS guia_t,
+  MEMBER FUNCTION guiasPorFecha(f IN DATE) RETURN guia_t,
   -- Método para obtener todos los guías que conducen esta ruta en una fecha dada.
-  METHOD guiasPorTurista(t turista_t) RETURNS guia_t,
+  MEMBER FUNCTION guiasPorTurista(t IN turista_t) RETURN guia_t,
   -- Método para obtener los guías que han conducido a un turista dado en esta ruta.
-  METHOD obtenerVisitantes() RETURNS turista_t,
+  MEMBER FUNCTION obtenerVisitantes RETURN turista_t,
   -- Metodo que devuelve todos los visitantes que han hecho esta ruta alguna vez.
-  METHOD visitantesPorGuia(g guia_t) RETURNS turista_t,
+  MEMBER FUNCTION visitantesPorGuia(g IN guia_t) RETURN turista_t,
   -- Método que devuelve todos los turistas a los cuales un guía dado los condujo por esta ruta.
 );
 /
