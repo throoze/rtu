@@ -37,6 +37,7 @@ CREATE TABLE Turista OF turista_t (
   mail                NOT NULL,
   nombre              NOT NULL,
   username            NOT NULL,
+  CONSTRAINT PK_TURISTA PRIMARY KEY (username),
   CHECK (apellido LIKE '^[a-zA-Z]{1,20}'),                      --String valido
   CHECK (contrasena LIKE '^[a-zA-Z]{1,8}'),                     --String valido
   -- CHECK (fechaRegistro <= (SELECT CURRENT_DATE FROM dual)),                           --fechaRegistro menor o igual que fecha actual
