@@ -31,6 +31,8 @@ DROP TYPE ruta_t FORCE;
 DROP TABLE Turista;
 DROP TABLE Hito;
 DROP TABLE Servicio;
+DROP TABLE Ofrece;
+DROP TABLE Subhito;
 
 
 -- Tipo que es una tabla de referencias a tipos de hito
@@ -144,14 +146,15 @@ CREATE TABLE Turista OF turista_t (
   genero              NOT NULL,
   mail                NOT NULL,
   nombre              NOT NULL,
-  username            NOT NULL
+  username            NOT NULL,
+  PRIMARY KEY (username)
 ) NESTED TABLE tipoHitosPreferidos STORE AS turista_hitos;
 
 CREATE TABLE Hito OF hito_t (
   estado      NOT NULL,
   publico     NULL,
   temperatura NOT NULL,
-  vestimenta  NOT NULL
+  vestimenta  NOT NULL,
 ) NESTED TABLE pago STORE AS hito_pago 
   NESTED TABLE categoria STORE AS hito_categoria;
 
@@ -165,3 +168,15 @@ CREATE TABLE Servicio OF servicio_t (
 ) NESTED TABLE costo STORE AS servicio_costo
   NESTED TABLE informacionContacto STORE AS servicio_informacion
   NESTED TABLE tipo STORE AS servicio_tipo;
+
+CREATE TABLE Ofrece (
+  hito      REF hito_t SCOPE IS Hito,
+  servicio  REF servicio_t SCOPE IS Servicio,
+  PRIMARY KEY (hito,servicio)
+);
+
+CREATE TABLE Subhito (
+  contiene  REF hito_t SCOPE IS Hito,
+  contenido REF hito_t SCOPE IS Hito,
+  PRIMARY KEY (contiene,contenido)
+);

@@ -20,6 +20,8 @@ BEGIN
     EXECUTE IMMEDIATE 'DROP TABLE Destino';
     EXECUTE IMMEDIATE 'DROP TABLE Ruta';
     EXECUTE IMMEDIATE 'DROP TABLE Guia';
+    EXECUTE IMMEDIATE 'DROP TABLE Ofrece';
+    EXECUTE IMMEDIATE 'DROP TABLE Subhito';
 EXCEPTION
     WHEN OTHERS THEN
       IF SQLCODE != -942 THEN
@@ -71,13 +73,15 @@ CREATE TABLE Servicio OF servicio_t (
 
 CREATE TABLE Destino OF destino_t (
   descripcion         NOT NULL,
-  nombre              NOT NULL
+  nombre              NOT NULL,
+  CONSTRAINT PK_DESTINO PRIMARY KEY (nombre),
 );
 
 CREATE TABLE Ruta OF ruta_t (
   fechaRegistro       NOT NULL,
   nombre              NOT NULL,
   -- CONSTRAINT C_RUTA_FECHA_REGISTRO CHECK (fechaRegistro <= (SELECT CURRENT_DATE FROM dual)),       --fechaRegistro menor o igual que fecha actual
+  CONSTRAINT PK_RUTA PRIMARY KEY (nombre),
   CONSTRAINT C_RUTA_FECHA_REGISTRO CHECK (nombre LIKE '^[a-zA-Z]{1,20}')     --String valido
 ) NESTED TABLE tipo STORE AS ruta_tipoHito;
 
@@ -85,3 +89,16 @@ CREATE TABLE Guia OF guia_t (
   CONSTRAINT PK_GUIA PRIMARY KEY (username)
 ) NESTED TABLE idiomas STORE AS guia_idiomas
   NESTED TABLE telefonos STORE AS guia_telefonos;
+
+
+CREATE TABLE Ofrece (
+  hito      REF hito_t SCOPE IS Hito,
+  servicio  REF servicio_t SCOPE IS Servicio,
+  PRIMARY KEY (hito,servicio)
+);
+
+CREATE TABLE Subhito (
+  contiene  REF hito_t SCOPE IS Hito,
+  contenido REF hito_t SCOPE IS Hito,
+  PRIMARY KEY (contiene,contenido)
+);
