@@ -168,7 +168,7 @@ ALTER TYPE turista_t ADD MEMBER FUNCTION buscarRutas RETURN tabla_ruta_t CASCADE
 
 -- Tipo de la asociación dirige
 CREATE OR REPLACE TYPE dirige_t AS OBJECT (
-  precios       tabla_costo_t
+  precios       tabla_costo_t,
   guia          REF guia_t,
   ruta          REF ruta_t
 );
