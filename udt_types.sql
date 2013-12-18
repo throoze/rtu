@@ -19,6 +19,7 @@ DROP TYPE tabla_tipoHito_t FORCE;
 DROP TYPE tabla_idiomas_t FORCE;
 DROP TYPE tabla_telefonos_t FORCE;
 DROP TYPE turista_t FORCE;
+DROP TYPE tabla_turista_t FORCE;
 DROP TYPE guia_t FORCE;
 DROP TYPE destino_t FORCE;
 DROP TYPE costo_t FORCE;
@@ -34,6 +35,8 @@ DROP TYPE tabla_tipoServicio_t FORCE;
 DROP TYPE dirige_t FORCE;
 DROP TYPE Subhito_t FORCE;
 DROP TYPE Ofrece_t FORCE;
+DROP TYPE tabla_dirige_t FORCE;
+DROP TYPE tabla_conduce_t FORCE;
 
 
 -- Tipo que es una tabla de referencias a tipos de hito
@@ -64,6 +67,8 @@ CREATE OR REPLACE TYPE turista_t AS OBJECT (
 ) NOT FINAL;
 /
 
+CREATE OR REPLACE TYPE tabla_turista_t AS TABLE of REF turista_t;
+/
 
 -- Tipo guia
 CREATE OR REPLACE TYPE guia_t UNDER turista_t (
@@ -142,17 +147,17 @@ CREATE OR REPLACE TYPE ruta_t AS OBJECT (
   --Método que calcula el costo total, dada la lista de costos del Guía y la lista de costos de los hitos.
   MEMBER FUNCTION calcularDistanciaTotal RETURN NUMBER,
   -- Argumento de entrada es Vias pero dicha tabla no esta creada, puesto que no forma parte de nuestro subconjunto.
-  MEMBER FUNCTION guiasDisponibles RETURN guia_t,
+  MEMBER FUNCTION guiasDisponibles RETURN tabla_guia_t,
   -- Método para obtener los guías que están disponibles para dirigir esta ruta.
-  MEMBER FUNCTION guiasQueCondujeron RETURN guia_t,
+  MEMBER FUNCTION guiasQueCondujeron RETURN tabla_guia_t,
   -- Método que devuelve todos los guías que han conducido esta ruta alguna vez.
-  MEMBER FUNCTION guiasPorFecha(f IN DATE) RETURN guia_t,
+  MEMBER FUNCTION guiasPorFecha(f IN DATE) RETURN tabla_guia_t,
   -- Método para obtener todos los guías que conducen esta ruta en una fecha dada.
-  MEMBER FUNCTION guiasPorTurista(t IN turista_t) RETURN guia_t,
+  MEMBER FUNCTION guiasPorTurista(t IN turista_t) RETURN tabla_guia_t,
   -- Método para obtener los guías que han conducido a un turista dado en esta ruta.
-  MEMBER FUNCTION obtenerVisitantes RETURN turista_t,
+  MEMBER FUNCTION obtenerVisitantes RETURN tabla_turista_t,
   -- Metodo que devuelve todos los visitantes que han hecho esta ruta alguna vez.
-  MEMBER FUNCTION visitantesPorGuia(g IN guia_t) RETURN turista_t
+  MEMBER FUNCTION visitantesPorGuia(g IN guia_t) RETURN tabla_turista_t
   -- Método que devuelve todos los turistas a los cuales un guía dado los condujo por esta ruta.
 );
 /
@@ -162,16 +167,16 @@ CREATE OR REPLACE TYPE ruta_t AS OBJECT (
 CREATE OR REPLACE TYPE tabla_ruta_t AS TABLE of REF ruta_t;
 /
 
-
--- Añadimos un método a turista_t, ahora que disponemos del tipo tabla_ruta_t
-ALTER TYPE turista_t ADD MEMBER FUNCTION buscarRutas RETURN tabla_ruta_t CASCADE;
-
 -- Tipo de la asociación dirige
 CREATE OR REPLACE TYPE dirige_t AS OBJECT (
   precios       tabla_costo_t,
   guia          REF guia_t,
   ruta          REF ruta_t
 );
+/
+
+-- Colección de instancias de la relación dirige:
+CREATE OR REPLACE TYPE tabla_dirige_t AS TABLE of REF dirige_t;
 /
 
 -- Tipo para la relación ternaria "conduce", entre Guia, Turista y Ruta:
@@ -185,6 +190,10 @@ CREATE OR REPLACE TYPE conduce_t AS OBJECT (
 );
 /
 
+-- Colección de instancias de la relación conduce:
+CREATE OR REPLACE TYPE tabla_conduce_t AS TABLE of REF conduce_t;
+/
+
 CREATE OR REPLACE TYPE Subhito_t AS OBJECT (
   contiene  REF hito_t,
   contenido REF hito_t
@@ -196,3 +205,30 @@ CREATE OR REPLACE TYPE Ofrece_t AS OBJECT (
   servicio  REF servicio_t
 );
 /
+
+-- A continuación se especican más métodos que requieren de la pre existencia de algunos tipos para compilar correctamente:
+
+-- Añadimos un método a turista_t, ahora que disponemos del tipo tabla_ruta_t.
+-- Este método devuelve la lista de rutas en las cuales ha participado el turista.
+ALTER TYPE turista_t ADD MEMBER FUNCTION buscarRutas RETURN tabla_ruta_t CASCADE;
+
+-- Devuelve las rutas que el guia puede dirigir, junto con los costos asociados.
+ALTER TYPE guia_t ADD MEMBER FUNCTION rutasDisponibles RETURN tabla_dirige_t CASCADE;
+
+-- Devuelve todos los turistas guiados por el guia, junto a la ruta, fecha y hora asociada.
+ALTER TYPE guia_t ADD MEMBER FUNCTION turistasGuiados RETURN tabla_conduce_t CASCADE;
+
+-- Devuelve todos los turistas guiados en una fecha dada, junto a la ruta y hora asociada.
+ALTER TYPE guia_t ADD MEMBER FUNCTION turistasPorFecha(f IN DATE) RETURN tabla_conduce_t CASCADE;
+
+-- Devuelve todos los turistas guiados en una ruta dada, junto a la fecha y hora asociada.
+ALTER TYPE guia_t ADD MEMBER FUNCTION turistasPorRuta(r IN ruta_t) RETURN tabla_conduce_t CASCADE;
+
+-- Devuelve todas las rutas guiadas por el guia, junto a los turistas, fecha y hora asociada.
+ALTER TYPE guia_t ADD MEMBER FUNCTION rutasGuiadas RETURN tabla_conduce_t CASCADE;
+
+-- Devuelve todas las rutas guiadas en una fecha dada, junto a los turistas y hora asociada.
+ALTER TYPE guia_t ADD MEMBER FUNCTION rutasPorFecha(f IN DATE) RETURN tabla_conduce_t CASCADE;
+
+-- Devuelve todas las rutas guiadas para un turista dado, junto a la fecha y hora asociada.
+ALTER TYPE guia_t ADD MEMBER FUNCTION rutasPorTurista(r IN turista_t) RETURN tabla_conduce_t CASCADE;
