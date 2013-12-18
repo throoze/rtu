@@ -68,10 +68,6 @@ CREATE TABLE Servicio OF servicio_t (
   NESTED TABLE informacionContacto STORE AS servicio_informacion
   NESTED TABLE tipo STORE AS servicio_tipo;
 
-CREATE TABLE Guia OF guia_t () 
-NESTED TABLE idiomas STORE AS guia_idiomas
-NESTED TABLE telefonos STORE AS guia_telefonos;
-
 CREATE TABLE Destino OF destino_t (
   descripcion         NOT NULL,
   nombre              NOT NULL
@@ -83,3 +79,8 @@ CREATE TABLE Ruta OF ruta_t (
   -- CHECK (fechaRegistro <= (SELECT CURRENT_DATE FROM dual)),       --fechaRegistro menor o igual que fecha actual
   CHECK (nombre LIKE '^[a-zA-Z]{1,20}')     --String valido
 ) NESTED TABLE tipo STORE AS ruta_tipoHito;
+
+CREATE TABLE Guia OF guia_t () 
+NESTED TABLE idiomas STORE AS guia_idiomas
+NESTED TABLE telefonos STORE AS guia_telefonos;
+
