@@ -59,10 +59,11 @@ CREATE OR REPLACE TYPE turista_t AS OBJECT (
   tipoHitosPreferidos tabla_tipoHito_t,
   nombre              VARCHAR2(30),
   username            VARCHAR2(20),
-  MEMBER FUNCTION buscarRutas() RETURN tabla_ruta_t,
-  MEMBER FUNCTION calcularExperiencia() RETURN NUMBER --Argumento de entrada es Evaluable pero dicha 
-                                                      --tabla no esta creada puesto que no forma 
-                                                      --parte de nuestro subconjunto
+  --MEMBER FUNCTION buscarRutas() RETURN tabla_ruta_t,
+  METHOD buscarRutas() RETURNS tabla_ruta_t,
+  --MEMBER FUNCTION calcularExperiencia() RETURN NUMBER 
+  METHOD calcularExperiencia() RETURNS NUMBER
+  --Argumento de entrada es Evaluable pero dicha tabla no esta creada puesto que no forma parte de nuestro subconjunto.
 ) NOT FINAL;
 /
 
@@ -140,8 +141,11 @@ CREATE OR REPLACE TYPE ruta_t AS OBJECT (
   nombre         VARCHAR2(30),
   tipo           tabla_tipoHito_t,
   creador        REF turista_t,
-  MEMBER FUNCTION calcularCostoTotal(costosGuia IN tabla_costo_t, costoHito IN tabla_costo_t) RETURN NUMBER,
-  MEMBER FUNCTION calcularDistanciaTotal() RETURN NUMBER, 
+  --MEMBER FUNCTION calcularCostoTotal(costosGuia IN tabla_costo_t, costoHito IN tabla_costo_t) RETURN NUMBER,
+  METHOD calcularCostoTotal(costosGuia tabla_costo_t, costoHito tabla_costo_t) RETURNs NUMBER,
+  --Método que calcula el costo total, dada la lista de costos del Guía y la lista de costos de los hitos.
+  --MEMBER FUNCTION calcularDistanciaTotal() RETURN NUMBER, 
+  METHOD calcularDistanciaTotal() RETURNS NUMBER, 
   -- Argumento de entrada es Vias pero dicha tabla no esta creada, puesto que no forma parte de nuestro subconjunto.
   METHOD guiasDisponibles() RETURNS guia_t,
   -- Método para obtener los guías que están disponibles para dirigir esta ruta.
