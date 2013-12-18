@@ -233,9 +233,6 @@ ALTER TYPE guia_t ADD MEMBER FUNCTION turistasGuiados RETURN tabla_conduce_t CAS
 -- Devuelve todos los turistas guiados en una fecha dada, junto a la ruta y hora asociada.
 ALTER TYPE guia_t ADD MEMBER FUNCTION turistasPorFecha(f IN DATE) RETURN tabla_conduce_t CASCADE;
 
--- Devuelve todos los turistas guiados en una ruta dada, junto a la fecha y hora asociada.
-ALTER TYPE guia_t ADD MEMBER FUNCTION turistasPorRuta(r IN ruta_t) RETURN tabla_conduce_t CASCADE;
-
 -- Devuelve todas las rutas guiadas por el guia, junto a los turistas, fecha y hora asociada.
 ALTER TYPE guia_t ADD MEMBER FUNCTION rutasGuiadas RETURN tabla_conduce_t CASCADE;
 
