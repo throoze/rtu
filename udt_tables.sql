@@ -17,9 +17,9 @@ BEGIN
     EXECUTE IMMEDIATE 'DROP TABLE Turista';
     EXECUTE IMMEDIATE 'DROP TABLE Hito';
     EXECUTE IMMEDIATE 'DROP TABLE Servicio';
+    EXECUTE IMMEDIATE 'DROP TABLE Destinos';
+    EXECUTE IMMEDIATE 'DROP TABLE Rutas';
     EXECUTE IMMEDIATE 'DROP TABLE Guia';
-    EXECUTE IMMEDIATE 'DROP TABLE Destino';
-    EXECUTE IMMEDIATE 'DROP TABLE Ruta';
 EXCEPTION
     WHEN OTHERS THEN
       IF SQLCODE != -942 THEN
@@ -68,19 +68,19 @@ CREATE TABLE Servicio OF servicio_t (
   NESTED TABLE informacionContacto STORE AS servicio_informacion
   NESTED TABLE tipo STORE AS servicio_tipo;
 
-CREATE TABLE Destino OF destino_t (
+CREATE TABLE Destinos OF destino_t (
   descripcion         NOT NULL,
   nombre              NOT NULL
 );
 
-CREATE TABLE Ruta OF ruta_t (
+CREATE TABLE Rutas OF ruta_t (
   fechaRegistro       NOT NULL,
   nombre              NOT NULL,
   -- CHECK (fechaRegistro <= (SELECT CURRENT_DATE FROM dual)),       --fechaRegistro menor o igual que fecha actual
   CHECK (nombre LIKE '^[a-zA-Z]{1,20}')     --String valido
 ) NESTED TABLE tipo STORE AS ruta_tipoHito;
 
-CREATE TABLE Guia OF guia_t () 
-NESTED TABLE idiomas STORE AS guia_idiomas
-NESTED TABLE telefonos STORE AS guia_telefonos;
+CREATE TABLE Guia OF guia_t (
+) NESTED TABLE idiomas STORE AS guia_idiomas
+  NESTED TABLE telefonos STORE AS guia_telefonos;
 
