@@ -12,29 +12,32 @@
  */
 
 -- DROP de tipos si existen
-DROP TYPE tabla_tipoHito_t FORCE;
-DROP TYPE tabla_idiomas_t FORCE;
-DROP TYPE tabla_telefonos_t FORCE;
-DROP TYPE turista_t FORCE;
-DROP TYPE tabla_turista_t FORCE;
-DROP TYPE guia_t FORCE;
-DROP TYPE tabla_guia_t FORCE;
-DROP TYPE destino_t FORCE;
-DROP TYPE costo_t FORCE;
-DROP TYPE tabla_costo_t FORCE;
-DROP TYPE informacion_t FORCE;
-DROP TYPE tabla_informacion_t FORCE;
-DROP TYPE lista_dias_t FORCE;
-DROP TYPE servicio_t FORCE;
-DROP TYPE hito_t FORCE;
-DROP TYPE ruta_t FORCE;
-DROP TYPE tabla_ruta_t FORCE;
-DROP TYPE tabla_tipoServicio_t FORCE;
-DROP TYPE dirige_t FORCE;
-DROP TYPE Subhito_t FORCE;
 DROP TYPE Ofrece_t FORCE;
-DROP TYPE tabla_dirige_t FORCE;
+DROP TYPE Subhito_t FORCE;
 DROP TYPE tabla_conduce_t FORCE;
+DROP TYPE conduce_t FORCE;
+DROP TYPE tabla_dirige_t FORCE;
+DROP TYPE dirige_t FORCE;
+DROP TYPE tabla_ruta_t FORCE;
+DROP TYPE ruta_t FORCE;
+DROP TYPE hito_t FORCE;
+DROP TYPE servicio_t FORCE;
+DROP TYPE tabla_tipoServicio_t FORCE;
+DROP TYPE lista_dias_t FORCE;
+DROP TYPE tabla_informacion_t FORCE;
+DROP TYPE informacion_t FORCE;
+DROP TYPE tabla_costo_t FORCE;
+DROP TYPE costo_t FORCE;
+DROP TYPE destino_t FORCE;
+DROP TYPE tabla_guia_t FORCE;
+DROP TYPE guia_t FORCE;
+DROP TYPE tabla_turista_t FORCE;
+DROP TYPE turista_t FORCE;
+DROP TYPE tabla_telefonos_t FORCE;
+DROP TYPE tabla_idiomas_t FORCE;
+DROP TYPE tabla_tipoHito_t FORCE;
+
+
 
 
 -- Tipo para manejar la coleccion de "tipos de hito" de un hito
