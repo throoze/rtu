@@ -6,6 +6,9 @@
  *          Victor De Ponte 05-38087 <rdbvictor19@gmail.com>
  *          Ivan Travecedo  08-11131 <ivantrave@gmail.com>
  *
+ * Descripcion: Creacion de las tablas del modelo. Todos los
+ *              tipos aqui definidos se encuentran en el 
+ *              archivo udt_types.sql
  */
 
  -- Tables
@@ -131,7 +134,9 @@ EXCEPTION
 END;
 /
 
-
+-- Tabla Turista de objetos de tipo turista_t
+-- Contiene NESTED TABLE correspondiente a
+--    coleccion de hitos preferidos por el turista
 CREATE TABLE Turista OF turista_t (
   activo              NOT NULL,
   apellido            NOT NULL,
@@ -152,6 +157,11 @@ CREATE TABLE Turista OF turista_t (
 ) OBJECT ID PRIMARY KEY
   NESTED TABLE tipoHitosPreferidos STORE AS turista_hitos;
 
+-- Tabla Hito de objetos de tipo hito_t
+-- Contiene NESTED TABLE correspondiente a la
+-- coleccion de pagos del hito
+-- Contiene NESTED TABLE correspondiente a la
+-- coleccion de categorias a las que pertenece
 CREATE TABLE Hito OF hito_t (
   estado      NOT NULL,
   publico     NULL,
@@ -163,6 +173,11 @@ CREATE TABLE Hito OF hito_t (
   NESTED TABLE pago STORE AS hito_pago 
   NESTED TABLE categoria STORE AS hito_categoria;
 
+-- Tabla Servicio de objetos de tipo servicio_t
+-- Contiene NESTED TABLE correspondiente a coleccion de:
+--    costos del servicio
+--    informaciones de contacto del servicio
+--    tipos del servicio
 CREATE TABLE Servicio OF servicio_t (
   estado              NOT NULL,              
   duracion            NULL,
@@ -178,21 +193,29 @@ CREATE TABLE Servicio OF servicio_t (
   NESTED TABLE informacionContacto STORE AS servicio_informacion
   NESTED TABLE tipo STORE AS servicio_tipo;
 
+-- Tabla Destino de objetos de tipo destino_t
 CREATE TABLE Destino OF destino_t (
   descripcion         NOT NULL,
   nombre              NOT NULL,
   CONSTRAINT PK_DESTINO PRIMARY KEY (nombre)
 )OBJECT ID PRIMARY KEY;
 
+-- Tabla Ruta de objetos de tipo ruta_t
+-- Contiene NESTED TABLE correspondiente a:
+--    coleccion de tipos de hitos presentes en la ruta
 CREATE TABLE Ruta OF ruta_t (
   fechaRegistro       NOT NULL,
   nombre              NOT NULL,
-  -- CONSTRAINT C_RUTA_FECHA_REGISTRO CHECK (fechaRegistro <= (SELECT CURRENT_DATE FROM dual)),       --fechaRegistro menor o igual que fecha actual
   CONSTRAINT PK_RUTA PRIMARY KEY (nombre),
   CONSTRAINT C_RUTA_FECHA_REGISTRO CHECK (nombre LIKE '^[a-zA-Z]{1,20}')     --String valido
 ) OBJECT ID PRIMARY KEY
   NESTED TABLE tipo STORE AS ruta_tipoHito;
 
+-- Tabla Guia de objetos de tipo guia_t
+-- Contiene NESTED TABLE correspondiente a coleccion de:
+--    tipo de hitos que prefiere el guia
+--    idiomas que maneja el guia
+--    telefonos del guia
 CREATE TABLE Guia OF guia_t (
   CONSTRAINT PK_GUIA PRIMARY KEY (username)
 ) OBJECT ID PRIMARY KEY
@@ -200,11 +223,15 @@ CREATE TABLE Guia OF guia_t (
   NESTED TABLE idiomas STORE AS guia_idiomas
   NESTED TABLE telefonos STORE AS guia_telefonos;
 
+-- Tabla para manejar la relacion N:M entre hito y los
+-- servicios que este ofrece
 CREATE TABLE Ofrece OF Ofrece_t (
   CONSTRAINT FK_HITO FOREIGN KEY (hito) references Hito,
   CONSTRAINT FK_SERVICIO FOREIGN KEY (servicio) references Servicio
 );
 
+-- Tabla para manejar la relacion N:M entre hito y otros hitos
+-- que este contiene
 CREATE TABLE Subhito OF Subhito_t (
   CONSTRAINT FK_Subhito_contiene FOREIGN KEY (contiene) references Hito,
   CONSTRAINT FK_Subhito_contenido FOREIGN KEY (contenido) references Hito
@@ -221,3 +248,4 @@ CREATE TABLE Conduce OF conduce_t (
   CONSTRAINT FK_CONDUCE_GUIA FOREIGN KEY (guia) REFERENCES Guia,
   CONSTRAINT FK_CONDUCE_TURISTA FOREIGN KEY (turista) REFERENCES Turista,
   CONSTRAINT FK_CONDUCE_RUTA FOREIGN KEY (ruta) REFERENCES Ruta
+);

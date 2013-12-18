@@ -6,6 +6,9 @@
  *          Victor De Ponte 05-38087 <rdbvictor19@gmail.com>
  *          Ivan Travecedo  08-11131 <ivantrave@gmail.com>
  *
+ * Descripcion: Ejecuta los scripts de los documentos
+ *				que tienen la implementacion de las
+ *				distintas porciones del modelo elaborado
  */
 
  -- Main
