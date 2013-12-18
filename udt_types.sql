@@ -18,6 +18,7 @@ DROP TYPE tabla_telefonos_t FORCE;
 DROP TYPE turista_t FORCE;
 DROP TYPE tabla_turista_t FORCE;
 DROP TYPE guia_t FORCE;
+DROP TYPE tabla_guia_t FORCE;
 DROP TYPE destino_t FORCE;
 DROP TYPE costo_t FORCE;
 DROP TYPE tabla_costo_t FORCE;
@@ -73,6 +74,9 @@ CREATE OR REPLACE TYPE guia_t UNDER turista_t (
   idiomas   tabla_idiomas_t,
   telefonos tabla_telefonos_t
 );
+/
+
+CREATE OR REPLACE TYPE tabla_guia_t AS TABLE of REF guia_t;
 /
 
 -- Tipo objeto destino
