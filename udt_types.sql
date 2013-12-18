@@ -152,7 +152,7 @@ CREATE OR REPLACE TYPE ruta_t AS OBJECT (
   -- Método para obtener los guías que han conducido a un turista dado en esta ruta.
   MEMBER FUNCTION obtenerVisitantes RETURN turista_t,
   -- Metodo que devuelve todos los visitantes que han hecho esta ruta alguna vez.
-  MEMBER FUNCTION visitantesPorGuia(g IN guia_t) RETURN turista_t,
+  MEMBER FUNCTION visitantesPorGuia(g IN guia_t) RETURN turista_t
   -- Método que devuelve todos los turistas a los cuales un guía dado los condujo por esta ruta.
 );
 /
@@ -165,7 +165,6 @@ CREATE OR REPLACE TYPE tabla_ruta_t AS TABLE of REF ruta_t;
 
 -- Añadimos un método a turista_t, ahora que disponemos del tipo tabla_ruta_t
 ALTER TYPE turista_t ADD MEMBER FUNCTION buscarRutas RETURN tabla_ruta_t CASCADE;
-/
 
 -- Tipo de la asociación dirige
 CREATE OR REPLACE dirige_t AS OBJECT (
