@@ -176,7 +176,7 @@ CREATE OR REPLACE TYPE ruta_t AS OBJECT (
   MEMBER FUNCTION obtenerVisitantes RETURN tabla_turista_t,
   
   -- Método que devuelve todos los turistas a los cuales un guía dado los condujo por esta ruta.
-  MEMBER FUNCTION visitantesPorGuia(g IN guia_t) RETURN tabla_turista_t,
+  MEMBER FUNCTION visitantesPorGuia(g IN guia_t) RETURN tabla_turista_t
 );
 /
 
