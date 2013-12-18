@@ -55,6 +55,16 @@ END;
 /
 
 BEGIN
+    EXECUTE IMMEDIATE 'DROP TABLE Compone';
+EXCEPTION
+    WHEN OTHERS THEN
+      IF SQLCODE != -942 THEN
+         RAISE;
+      END IF;
+END;
+/
+
+BEGIN
     EXECUTE IMMEDIATE 'DROP TABLE Turista';
 EXCEPTION
     WHEN OTHERS THEN
@@ -225,14 +235,14 @@ CREATE TABLE Guia OF guia_t (
 
 -- Tabla para manejar la relacion N:M entre hito y los
 -- servicios que este ofrece
-CREATE TABLE Ofrece OF Ofrece_t (
+CREATE TABLE Ofrece OF ofrece_t (
   CONSTRAINT FK_HITO FOREIGN KEY (hito) references Hito,
   CONSTRAINT FK_SERVICIO FOREIGN KEY (servicio) references Servicio
 );
 
 -- Tabla para manejar la relacion N:M entre hito y otros hitos
 -- que este contiene
-CREATE TABLE Subhito OF Subhito_t (
+CREATE TABLE Subhito OF subhito_t (
   CONSTRAINT FK_Subhito_contiene FOREIGN KEY (contiene) references Hito,
   CONSTRAINT FK_Subhito_contenido FOREIGN KEY (contenido) references Hito
 );
@@ -248,4 +258,9 @@ CREATE TABLE Conduce OF conduce_t (
   CONSTRAINT FK_CONDUCE_GUIA FOREIGN KEY (guia) REFERENCES Guia,
   CONSTRAINT FK_CONDUCE_TURISTA FOREIGN KEY (turista) REFERENCES Turista,
   CONSTRAINT FK_CONDUCE_RUTA FOREIGN KEY (ruta) REFERENCES Ruta
+);
+
+CREATE TABLE Compone OF compone_t (
+  CONSTRAINT FK_COMPONE_HITO FOREIGN KEY (hito) REFERENCES Hito,
+  CONSTRAINT FK_COMPONE_RUTA FOREIGN KEY (ruta) REFERENCES Ruta
 );

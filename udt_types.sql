@@ -12,8 +12,10 @@
  */
 
 -- DROP de tipos si existen
-DROP TYPE Ofrece_t FORCE;
-DROP TYPE Subhito_t FORCE;
+DROP TYPE tabla_compone_t FORCE;
+DROP TYPE compone_t FORCE;
+DROP TYPE ofrece_t FORCE;
+DROP TYPE subhito_t FORCE;
 DROP TYPE tabla_conduce_t FORCE;
 DROP TYPE conduce_t FORCE;
 DROP TYPE tabla_dirige_t FORCE;
@@ -151,22 +153,30 @@ CREATE OR REPLACE TYPE ruta_t AS OBJECT (
   nombre         VARCHAR2(30),
   tipo           tabla_tipoHito_t,
   creador        REF turista_t,
-  MEMBER FUNCTION calcularCostoTotal(costosGuia IN tabla_costo_t, costoHito IN tabla_costo_t) RETURN NUMBER,
+  
   --Método que calcula el costo total, dada la lista de costos del Guía y la lista de costos de los hitos.
-  MEMBER FUNCTION calcularDistanciaTotal RETURN NUMBER,
+  MEMBER FUNCTION calcularCostoTotal(costosGuia IN tabla_costo_t, costoHito IN tabla_costo_t) RETURN NUMBER,
+  
   -- Argumento de entrada es Vias pero dicha tabla no esta creada, puesto que no forma parte de nuestro subconjunto.
-  MEMBER FUNCTION guiasDisponibles RETURN tabla_guia_t,
+  MEMBER FUNCTION calcularDistanciaTotal RETURN NUMBER,
+  
   -- Método para obtener los guías que están disponibles para dirigir esta ruta.
-  MEMBER FUNCTION guiasQueCondujeron RETURN tabla_guia_t,
+  MEMBER FUNCTION guiasDisponibles RETURN tabla_guia_t,
+  
   -- Método que devuelve todos los guías que han conducido esta ruta alguna vez.
-  MEMBER FUNCTION guiasPorFecha(f IN DATE) RETURN tabla_guia_t,
+  MEMBER FUNCTION guiasQueCondujeron RETURN tabla_guia_t,
+  
   -- Método para obtener todos los guías que conducen esta ruta en una fecha dada.
-  MEMBER FUNCTION guiasPorTurista(t IN turista_t) RETURN tabla_guia_t,
+  MEMBER FUNCTION guiasPorFecha(f IN DATE) RETURN tabla_guia_t,
+
   -- Método para obtener los guías que han conducido a un turista dado en esta ruta.
-  MEMBER FUNCTION obtenerVisitantes RETURN tabla_turista_t,
+  MEMBER FUNCTION guiasPorTurista(t IN turista_t) RETURN tabla_guia_t,
+  
   -- Metodo que devuelve todos los visitantes que han hecho esta ruta alguna vez.
-  MEMBER FUNCTION visitantesPorGuia(g IN guia_t) RETURN tabla_turista_t
+  MEMBER FUNCTION obtenerVisitantes RETURN tabla_turista_t,
+  
   -- Método que devuelve todos los turistas a los cuales un guía dado los condujo por esta ruta.
+  MEMBER FUNCTION visitantesPorGuia(g IN guia_t) RETURN tabla_turista_t,
 );
 /
 
@@ -206,7 +216,7 @@ CREATE OR REPLACE TYPE tabla_conduce_t AS TABLE of REF conduce_t;
 
 -- Tipo objeto de la asociacion recursiva que describe
 -- si un hito esta contenido dentro de otro hito
-CREATE OR REPLACE TYPE Subhito_t AS OBJECT (
+CREATE OR REPLACE TYPE subhito_t AS OBJECT (
   contiene  REF hito_t,
   contenido REF hito_t
 );
@@ -215,10 +225,22 @@ CREATE OR REPLACE TYPE Subhito_t AS OBJECT (
 -- Tipo objeto de la asociacion ofrece entre hito
 -- y servicio.
 -- Un hito ofrece servicios
-CREATE OR REPLACE TYPE Ofrece_t AS OBJECT (
+CREATE OR REPLACE TYPE ofrece_t AS OBJECT (
   hito      REF hito_t,
   servicio  REF servicio_t
 );
+/
+
+-- Tipo objeto de la asociación "compone" entre hito y ruta
+-- Uno o muchos hitos componen una o muchas rutas.
+CREATE OR REPLACE TYPE compone_t AS OBJECT (
+  hito      REF hito_t,
+  ruta      REF ruta_t
+);
+/
+
+-- Colección de instancias de la relación conduce:
+CREATE OR REPLACE TYPE tabla_compone_t AS TABLE of REF compone_t;
 /
 
 -- A continuación se especican más métodos que requieren de la pre existencia de algunos tipos para compilar correctamente:
@@ -244,3 +266,9 @@ ALTER TYPE guia_t ADD MEMBER FUNCTION rutasPorFecha(f IN DATE) RETURN tabla_cond
 
 -- Devuelve todas las rutas guiadas para un turista dado, junto a la fecha y hora asociada.
 ALTER TYPE guia_t ADD MEMBER FUNCTION rutasPorTurista(r IN turista_t) RETURN tabla_conduce_t CASCADE;
+
+-- Método que devuelve todos los Hitos que componen esta ruta.
+ALTER TYPE ruta_t ADD MEMBER FUNCTION obtenerHitos RETURN tabla_compone_t CASCADE;
+
+-- Método que devuelve todas las Rutas de las cuales forma parte este Hito.
+ALTER TYPE hito_t ADD MEMBER FUNCTION obtenerRutas RETURN tabla_compone_t CASCADE;
