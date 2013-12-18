@@ -81,8 +81,6 @@ CREATE TABLE Rutas OF ruta_t (
   CHECK (nombre LIKE '^[a-zA-Z]{1,20}')     --String valido
 ) NESTED TABLE tipo STORE AS rutas_tipoHito;
 
-CREATE TABLE Guia OF guia_t (
-  idiomas             NOT NULL,
-  telefonos           NOT NULL
-) NESTED TABLE idiomas STORE AS guia_idiomas
-  NESTED TABLE telefonos STORE AS guia_telefonos;
+CREATE TABLE Guia OF guia_t
+NESTED TABLE idiomas STORE AS guia_idiomas
+NESTED TABLE telefonos STORE AS guia_telefonos;
