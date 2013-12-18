@@ -155,15 +155,15 @@ CREATE TABLE Guia OF guia_t (
 
 
 CREATE TABLE Ofrece (
-  hito      REF hito_t SCOPE IS Hito,
-  servicio  REF servicio_t SCOPE IS Servicio,
+  hito      REF hito_t,
+  servicio  REF servicio_t,
   CONSTRAINT FK_HITO FOREIGN KEY (hito) references Hito,
   CONSTRAINT FK_SERVICIO FOREIGN KEY (servicio) references Servicio
 );
 
 CREATE TABLE Subhito (
-  contiene  REF hito_t SCOPE IS Hito,
-  contenido REF hito_t SCOPE IS Hito,
+  contiene  REF hito_t,
+  contenido REF hito_t,
   CONSTRAINT FK_HITO_CONTIENE FOREIGN KEY (contiene) references Hito,
   CONSTRAINT FK_HITO_CONTENIDO FOREIGN KEY (contenido) references Hito
 );
