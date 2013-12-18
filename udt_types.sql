@@ -170,7 +170,7 @@ ALTER TYPE turista_t ADD MEMBER FUNCTION buscarRutas RETURN tabla_ruta_t CASCADE
 CREATE OR REPLACE TYPE dirige_t AS OBJECT (
   precios       tabla_costo_t
   guia          REF guia_t,
-  ruta          REF ruta_t,
+  ruta          REF ruta_t
 );
 /
 
@@ -181,7 +181,7 @@ CREATE OR REPLACE TYPE conduce_t AS OBJECT (
   horaInicio    DATE,
   guia          REF guia_t,
   turista       REF turista_t,
-  ruta          REF ruta_t,
+  ruta          REF ruta_t
 );
 /
 
