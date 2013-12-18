@@ -82,6 +82,7 @@ CREATE TABLE Ruta OF ruta_t (
 ) NESTED TABLE tipo STORE AS ruta_tipoHito;
 
 CREATE TABLE Guia OF guia_t (
+  idiomas             NOT NULL,
+  telefonos           NOT NULL
 ) NESTED TABLE idiomas STORE AS guia_idiomas
   NESTED TABLE telefonos STORE AS guia_telefonos;
-
