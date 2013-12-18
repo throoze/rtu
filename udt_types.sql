@@ -10,7 +10,7 @@
  * NOTA: REVISAR NULL/NOT NULL para atributos y colocarlos
  *       La temperatura estara expresada en en un numero sin unidades?
  *       No he colocado ninguno de los atributos derivados
- *       Add constrains para primary key
+ *       Add constraints para primary key
  */
 
 -- Tipo de datos
@@ -31,6 +31,7 @@ DROP TYPE hito_t FORCE;
 DROP TYPE ruta_t FORCE;
 DROP TYPE tabla_ruta_t FORCE;
 DROP TYPE tabla_tipoServicio_t FORCE;
+DROP TYPE dirige_t FORCE;
 
 
 -- Tipo que es una tabla de referencias a tipos de hito
@@ -138,13 +139,43 @@ CREATE OR REPLACE TYPE ruta_t AS OBJECT (
   tipo           tabla_tipoHito_t,
   creador        REF turista_t,
   MEMBER FUNCTION calcularCostoTotal(costosGuia IN tabla_costo_t, costoHito IN tabla_costo_t) RETURN NUMBER,
-  MEMBER FUNCTION calcularDistanciaTotal() RETURN NUMBER    --Argumento de entrada es Vias pero dicha 
-                                                            --tabla no esta creada puesto que no forma 
-                                                            --parte de nuestro subconjunto
+  MEMBER FUNCTION calcularDistanciaTotal() RETURN NUMBER, 
+  -- Argumento de entrada es Vias pero dicha tabla no esta creada, puesto que no forma parte de nuestro subconjunto.
+  METHOD guiasDisponibles() RETURNS guia_t,
+  -- Método para obtener los guías que están disponibles para dirigir esta ruta.
+  METHOD guiasQueCondujeron() RETURNS guia_t,
+  -- Método que devuelve todos los guías que han conducido esta ruta alguna vez.
+  METHOD guiasPorFecha(f DATE) RETURNS guia_t,
+  -- Método para obtener todos los guías que conducen esta ruta en una fecha dada.
+  METHOD guiasPorTurista(t turista_t) RETURNS guia_t,
+  -- Método para obtener los guías que han conducido a un turista dado en esta ruta.
+  METHOD obtenerVisitantes() RETURNS turista_t,
+  -- Metodo que devuelve todos los visitantes que han hecho esta ruta alguna vez.
+  METHOD visitantesPorGuia(g guia_t) RETURNS turista_t,
+  -- Método que devuelve todos los turistas a los cuales un guía dado los condujo por esta ruta.
 );
 /
 
 --Tipo que es una tabla de referencias a rutas para ser usado en 
 --la operacion buscarRutas()
 CREATE OR REPLACE TYPE tabla_ruta_t AS TABLE of REF ruta_t;
+/
+
+-- Tipo de la asociación dirige
+CREATE OR REPLACE dirige_t AS OBJECT (
+  precios       tabla_costo_t
+  guia          REF guia_t,
+  ruta          REF ruta_t,
+);
+/
+
+-- Tipo para la relación ternaria "conduce", entre Guia, Turista y Ruta:
+-- Un Guia conduce a un Turista en una Ruta.
+CREATE OR REPLACE conduce_t AS OBJECT (
+  fecha         DATE,
+  horaInicio    DATE,
+  guia          REF guia_t,
+  turista       REF turista_t,
+  ruta          REF ruta_t,
+);
 /
