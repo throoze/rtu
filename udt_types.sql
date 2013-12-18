@@ -31,6 +31,8 @@ DROP TYPE hito_t FORCE;
 DROP TYPE ruta_t FORCE;
 DROP TYPE tabla_ruta_t FORCE;
 DROP TYPE tabla_tipoServicio_t FORCE;
+DROP TYPE Subhito_t FORCE;
+DROP TYPE Ofrece_t FORCE;
 
 
 -- Tipo que es una tabla de referencias a tipos de hito
@@ -147,4 +149,16 @@ CREATE OR REPLACE TYPE ruta_t AS OBJECT (
 --Tipo que es una tabla de referencias a rutas para ser usado en 
 --la operacion buscarRutas()
 CREATE OR REPLACE TYPE tabla_ruta_t AS TABLE of REF ruta_t;
+/
+
+CREATE OR REPLACE TYPE Subhito_t AS OBJECT (
+  contiene  REF hito_t,
+  contenido REF hito_t
+);
+/
+
+CREATE OR REPLACE TYPE Ofrece_t AS OBJECT (
+  hito      REF hito_t,
+  servicio  REF servicio_t
+);
 /

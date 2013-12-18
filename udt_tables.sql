@@ -91,6 +91,26 @@ EXCEPTION
 END;
 /
 
+BEGIN
+    EXECUTE IMMEDIATE 'DROP TABLE Ofrece';
+EXCEPTION
+    WHEN OTHERS THEN
+      IF SQLCODE != -942 THEN
+         RAISE;
+      END IF;
+END;
+/
+
+BEGIN
+    EXECUTE IMMEDIATE 'DROP TABLE Subhito';
+EXCEPTION
+    WHEN OTHERS THEN
+      IF SQLCODE != -942 THEN
+         RAISE;
+      END IF;
+END;
+/
+
 
 CREATE TABLE Turista OF turista_t (
   activo              NOT NULL,
@@ -160,17 +180,12 @@ CREATE TABLE Guia OF guia_t (
   NESTED TABLE idiomas STORE AS guia_idiomas
   NESTED TABLE telefonos STORE AS guia_telefonos;
 
-
-CREATE TABLE Ofrece (
-  hito      REF hito_t,
-  servicio  REF servicio_t,
+CREATE TABLE Ofrece OF Ofrece_t (
   CONSTRAINT FK_HITO FOREIGN KEY (hito) references Hito,
   CONSTRAINT FK_SERVICIO FOREIGN KEY (servicio) references Servicio
 );
 
-CREATE TABLE Subhito (
-  contiene  REF hito_t,
-  contenido REF hito_t,
-  CONSTRAINT FK_HITO_CONTIENE FOREIGN KEY (contiene) references Hito,
-  CONSTRAINT FK_HITO_CONTENIDO FOREIGN KEY (contenido) references Hito
+CREATE TABLE Subhito OF Subhito_t (
+  CONSTRAINT FK_Subhito_contiene FOREIGN KEY (contiene) references Hito,
+  CONSTRAINT FK_Subhito_contenido FOREIGN KEY (contenido) references Hito
 );
