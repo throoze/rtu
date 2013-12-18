@@ -150,7 +150,8 @@ CREATE TABLE Ruta OF ruta_t (
 
 CREATE TABLE Guia OF guia_t (
   CONSTRAINT PK_GUIA PRIMARY KEY (username)
-) NESTED TABLE idiomas STORE AS guia_idiomas
+) NESTED TABLE tipoHitosPreferidos STORE AS guia_hitos_preferidos
+  NESTED TABLE idiomas STORE AS guia_idiomas
   NESTED TABLE telefonos STORE AS guia_telefonos;
 
 
