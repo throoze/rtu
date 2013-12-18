@@ -6,15 +6,12 @@
  *          Victor De Ponte 05-38087 <rdbvictor19@gmail.com>
  *          Ivan Travecedo  08-11131 <ivantrave@gmail.com>
  *
- *
- * NOTA: REVISAR NULL/NOT NULL para atributos y colocarlos
- *       La temperatura estara expresada en en un numero sin unidades?
- *       No he colocado ninguno de los atributos derivados
- *       Add constraints para primary key
+ * Descripcion: Contiene la creacion de los tipos de datos
+ *              del modelo
+ * 
  */
 
--- Tipo de datos
-
+-- DROP de tipos si existen
 DROP TYPE tabla_tipoHito_t FORCE;
 DROP TYPE tabla_idiomas_t FORCE;
 DROP TYPE tabla_telefonos_t FORCE;
@@ -39,19 +36,20 @@ DROP TYPE tabla_dirige_t FORCE;
 DROP TYPE tabla_conduce_t FORCE;
 
 
--- Tipo que es una tabla de referencias a tipos de hito
+-- Tipo para manejar la coleccion de "tipos de hito" de un hito
 CREATE OR REPLACE TYPE tabla_tipoHito_t AS TABLE of VARCHAR2(20);
 /
 
--- Tipo que es una tabla de referencias a idiomas
+-- Tipo para manejar la coleccion de idiomas de un guia
 CREATE OR REPLACE TYPE tabla_idiomas_t AS TABLE of VARCHAR2(20);
 /
 
--- Tipo que es una tabla de referencias a telefonos
+-- Tipo para manejar la coleccion de numeros de telefono de 
+-- un guia
 CREATE OR REPLACE TYPE tabla_telefonos_t AS TABLE of NUMBER;
 /
 
--- Tipo turista
+-- Tipo objeto turista
 CREATE OR REPLACE TYPE turista_t AS OBJECT (
   activo              VARCHAR2(2),
   apellido            VARCHAR2(30),
@@ -70,49 +68,52 @@ CREATE OR REPLACE TYPE turista_t AS OBJECT (
 CREATE OR REPLACE TYPE tabla_turista_t AS TABLE of REF turista_t;
 /
 
--- Tipo guia
+-- Tipo guia que hereda de turista
 CREATE OR REPLACE TYPE guia_t UNDER turista_t (
   idiomas   tabla_idiomas_t,
   telefonos tabla_telefonos_t
 );
 /
 
--- Tipo destino
+-- Tipo objeto destino
 CREATE OR REPLACE TYPE destino_t AS OBJECT (
   descripcion VARCHAR2(100),
   nombre      VARCHAR2(30)
 ) NOT FINAL;
 /
 
--- Tipo para tipos de hito
+-- Tipo objeto para manejo de costos asociados
+-- a un tipo de publico determinado
 CREATE OR REPLACE TYPE costo_t AS OBJECT (
   publico VARCHAR2(20),
   monto   NUMBER
 );
 /
--- Tipo que es una tabla de referencias a costos
+-- Tipo para manejar una coleccion de referencias a costos
 CREATE OR REPLACE TYPE tabla_costo_t AS TABLE of REF costo_t;
 /
 
--- Tipo para tipos de hito
+-- Tipo objeto para manejo de informacion de servicios
 CREATE OR REPLACE TYPE informacion_t AS OBJECT (
   tipo      VARCHAR2(20),
   contacto  VARCHAR2(100)
 );
 /
 
--- Tipo que es una tabla de referencias a costos
+-- Tipo para manejar una coleccion de referencias a
+-- informacion de servicios
 CREATE OR REPLACE TYPE tabla_informacion_t AS TABLE of REF informacion_t;
 /
 
+-- Tipo para manejar un VARRAY de dias de la semana
 CREATE OR REPLACE TYPE lista_dias_t AS VARRAY(7) of VARCHAR2(10);
 /
 
--- Tipo que es una tabla de referencias a idiomas
+-- Tipo para manejar una coleccion de tipos de servicios
 CREATE OR REPLACE TYPE tabla_tipoServicio_t AS TABLE of VARCHAR2(20);
 /
 
--- Tipo para servicio
+-- Tipo para servicio, hereda del tipo destino
 CREATE OR REPLACE TYPE servicio_t UNDER destino_t (
   costo               tabla_costo_t,
   estado              VARCHAR2(13),
@@ -126,7 +127,7 @@ CREATE OR REPLACE TYPE servicio_t UNDER destino_t (
 );
 /
 
--- Tipo para hito
+-- Tipo para hito, hereda del tipo destino
 CREATE OR REPLACE TYPE hito_t UNDER destino_t (
   categoria   tabla_tipoHito_t,
   estado      VARCHAR2(30),
@@ -137,7 +138,7 @@ CREATE OR REPLACE TYPE hito_t UNDER destino_t (
 );
 /
 
--- Tipo para ruta
+-- Tipo objeto para ruta
 CREATE OR REPLACE TYPE ruta_t AS OBJECT (
   fechaRegistro  DATE,
   nombre         VARCHAR2(30),
@@ -167,7 +168,9 @@ CREATE OR REPLACE TYPE ruta_t AS OBJECT (
 CREATE OR REPLACE TYPE tabla_ruta_t AS TABLE of REF ruta_t;
 /
 
--- Tipo de la asociación dirige
+-- Tipo objeto de la asociación dirige entre
+-- guias y rutas
+-- Guia dirige ruta
 CREATE OR REPLACE TYPE dirige_t AS OBJECT (
   precios       tabla_costo_t,
   guia          REF guia_t,
@@ -194,12 +197,17 @@ CREATE OR REPLACE TYPE conduce_t AS OBJECT (
 CREATE OR REPLACE TYPE tabla_conduce_t AS TABLE of REF conduce_t;
 /
 
+-- Tipo objeto de la asociacion recursiva que describe
+-- si un hito esta contenido dentro de otro hito
 CREATE OR REPLACE TYPE Subhito_t AS OBJECT (
   contiene  REF hito_t,
   contenido REF hito_t
 );
 /
 
+-- Tipo objeto de la asociacion ofrece entre hito
+-- y servicio.
+-- Un hito ofrece servicios
 CREATE OR REPLACE TYPE Ofrece_t AS OBJECT (
   hito      REF hito_t,
   servicio  REF servicio_t
