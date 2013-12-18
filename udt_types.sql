@@ -167,7 +167,7 @@ CREATE OR REPLACE TYPE tabla_ruta_t AS TABLE of REF ruta_t;
 ALTER TYPE turista_t ADD MEMBER FUNCTION buscarRutas RETURN tabla_ruta_t CASCADE;
 
 -- Tipo de la asociación dirige
-CREATE OR REPLACE dirige_t AS OBJECT (
+CREATE OR REPLACE TYPE dirige_t AS OBJECT (
   precios       tabla_costo_t
   guia          REF guia_t,
   ruta          REF ruta_t,
@@ -176,7 +176,7 @@ CREATE OR REPLACE dirige_t AS OBJECT (
 
 -- Tipo para la relación ternaria "conduce", entre Guia, Turista y Ruta:
 -- Un Guia conduce a un Turista en una Ruta.
-CREATE OR REPLACE conduce_t AS OBJECT (
+CREATE OR REPLACE TYPE conduce_t AS OBJECT (
   fecha         DATE,
   horaInicio    DATE,
   guia          REF guia_t,
