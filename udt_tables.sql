@@ -109,15 +109,18 @@ CREATE TABLE Turista OF turista_t (
   CONSTRAINT C_TURISTA_MAIL CHECK (mail LIKE '([\w-\.]+)@((?:[\w]+\.)+)([a-zA-Z]{2,4})'), --Mail valido
   CONSTRAINT C_TURISTA_NOMBRE CHECK (nombre LIKE '^[a-zA-Z]{1,20}'),                      --String valido
   CONSTRAINT C_TURISTA_USERNAME CHECK (username LIKE '^[a-zA-Z]{1,20}')                   --String valido
-) NESTED TABLE tipoHitosPreferidos STORE AS turista_hitos;
+) OBJECT ID PRIMARY KEY
+  NESTED TABLE tipoHitosPreferidos STORE AS turista_hitos;
 
 CREATE TABLE Hito OF hito_t (
   estado      NOT NULL,
   publico     NULL,
   temperatura NOT NULL,
   vestimenta  NOT NULL,
+  CONSTRAINT  PK_HITO PRIMARY KEY (nombre),
   CONSTRAINT C_HITO_ESTADO CHECK (estado IN ('Abierto', 'Cerrado Permanentemente', 'Cerrado Temporalmente'))
-) NESTED TABLE pago STORE AS hito_pago 
+) OBJECT ID PRIMARY KEY
+  NESTED TABLE pago STORE AS hito_pago 
   NESTED TABLE categoria STORE AS hito_categoria;
 
 CREATE TABLE Servicio OF servicio_t (
@@ -127,9 +130,11 @@ CREATE TABLE Servicio OF servicio_t (
   fechaFin            NULL,
   horaComienzo        NOT NULL,
   dia                 NULL,
+  CONSTRAINT PK_SERVICIO PRIMARY KEY (nombre),
   CONSTRAINT C_SERVICIO_ESTADO CHECK (estado IN ('Disponible', 'No Disponible')),
   CONSTRAINT C_SERVICIO_FECHAS CHECK (fechaInicio <= fechaFin)
-) NESTED TABLE costo STORE AS servicio_costo
+) OBJECT ID PRIMARY KEY
+  NESTED TABLE costo STORE AS servicio_costo
   NESTED TABLE informacionContacto STORE AS servicio_informacion
   NESTED TABLE tipo STORE AS servicio_tipo;
 
@@ -137,7 +142,7 @@ CREATE TABLE Destino OF destino_t (
   descripcion         NOT NULL,
   nombre              NOT NULL,
   CONSTRAINT PK_DESTINO PRIMARY KEY (nombre)
-);
+)OBJECT ID PRIMARY KEY;
 
 CREATE TABLE Ruta OF ruta_t (
   fechaRegistro       NOT NULL,
@@ -145,11 +150,13 @@ CREATE TABLE Ruta OF ruta_t (
   -- CONSTRAINT C_RUTA_FECHA_REGISTRO CHECK (fechaRegistro <= (SELECT CURRENT_DATE FROM dual)),       --fechaRegistro menor o igual que fecha actual
   CONSTRAINT PK_RUTA PRIMARY KEY (nombre),
   CONSTRAINT C_RUTA_FECHA_REGISTRO CHECK (nombre LIKE '^[a-zA-Z]{1,20}')     --String valido
-) NESTED TABLE tipo STORE AS ruta_tipoHito;
+) OBJECT ID PRIMARY KEY
+  NESTED TABLE tipo STORE AS ruta_tipoHito;
 
 CREATE TABLE Guia OF guia_t (
   CONSTRAINT PK_GUIA PRIMARY KEY (username)
-) NESTED TABLE tipoHitosPreferidos STORE AS guia_hitos_preferidos
+) OBJECT ID PRIMARY KEY
+  NESTED TABLE tipoHitosPreferidos STORE AS guia_hitos_preferidos
   NESTED TABLE idiomas STORE AS guia_idiomas
   NESTED TABLE telefonos STORE AS guia_telefonos;
 
