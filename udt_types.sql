@@ -59,7 +59,6 @@ CREATE OR REPLACE TYPE turista_t AS OBJECT (
   tipoHitosPreferidos tabla_tipoHito_t,
   nombre              VARCHAR2(30),
   username            VARCHAR2(20),
-  MEMBER FUNCTION buscarRutas RETURN tabla_ruta_t,
   MEMBER FUNCTION calcularExperiencia RETURN NUMBER
   --Argumento de entrada es Evaluable pero dicha tabla no esta creada puesto que no forma parte de nuestro subconjunto.
 ) NOT FINAL;
@@ -161,6 +160,11 @@ CREATE OR REPLACE TYPE ruta_t AS OBJECT (
 --Tipo que es una tabla de referencias a rutas para ser usado en 
 --la operacion buscarRutas()
 CREATE OR REPLACE TYPE tabla_ruta_t AS TABLE of REF ruta_t;
+/
+
+
+-- Añadimos un método a turista_t, ahora que disponemos del tipo tabla_ruta_t
+ALTER TYPE turista_t ADD MEMBER FUNCTION buscarRutas RETURN tabla_ruta_t CASCADE;
 /
 
 -- Tipo de la asociación dirige
