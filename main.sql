@@ -15,4 +15,3 @@
 
 @udt_types.sql
 @udt_tables.sql
-@udt_constraints.sql

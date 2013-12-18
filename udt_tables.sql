@@ -247,11 +247,15 @@ CREATE TABLE Subhito OF subhito_t (
   CONSTRAINT FK_Subhito_contenido FOREIGN KEY (contenido) references Hito
 );
 
+-- Tabla para manejar la relación N:M entre guía y ruta, especificada por el 
+-- tipo dirige_t
 CREATE TABLE Dirige OF dirige_t (
   CONSTRAINT FK_DIRIGE_GUIA FOREIGN KEY (guia) REFERENCES Guia,
   CONSTRAINT FK_DIRIGE_RUTA FOREIGN KEY (ruta) REFERENCES Ruta
 ) NESTED TABLE precios STORE AS dirige_precios;
 
+-- Tabla para manejar la relación ternaria que existe entre Guia, Ruta y
+-- Turista
 CREATE TABLE Conduce OF conduce_t (
   fecha               NOT NULL,
   horaInicio          NOT NULL,
@@ -260,6 +264,7 @@ CREATE TABLE Conduce OF conduce_t (
   CONSTRAINT FK_CONDUCE_RUTA FOREIGN KEY (ruta) REFERENCES Ruta
 );
 
+-- Tabla que maneja la relación N:M "compone" entre Hito y Ruta.
 CREATE TABLE Compone OF compone_t (
   CONSTRAINT FK_COMPONE_HITO FOREIGN KEY (hito) REFERENCES Hito,
   CONSTRAINT FK_COMPONE_RUTA FOREIGN KEY (ruta) REFERENCES Ruta
