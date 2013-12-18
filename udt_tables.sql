@@ -111,6 +111,26 @@ EXCEPTION
 END;
 /
 
+BEGIN
+    EXECUTE IMMEDIATE 'DROP TABLE Ofrece';
+EXCEPTION
+    WHEN OTHERS THEN
+      IF SQLCODE != -942 THEN
+         RAISE;
+      END IF;
+END;
+/
+
+BEGIN
+    EXECUTE IMMEDIATE 'DROP TABLE Subhito';
+EXCEPTION
+    WHEN OTHERS THEN
+      IF SQLCODE != -942 THEN
+         RAISE;
+      END IF;
+END;
+/
+
 
 CREATE TABLE Turista OF turista_t (
   activo              NOT NULL,
@@ -180,19 +200,14 @@ CREATE TABLE Guia OF guia_t (
   NESTED TABLE idiomas STORE AS guia_idiomas
   NESTED TABLE telefonos STORE AS guia_telefonos;
 
-
-CREATE TABLE Ofrece (
-  hito      REF hito_t,
-  servicio  REF servicio_t,
-  CONSTRAINT FK_HITO FOREIGN KEY (hito) REFERENCES Hito,
-  CONSTRAINT FK_SERVICIO FOREIGN KEY (servicio) REFERENCES Servicio
+CREATE TABLE Ofrece OF Ofrece_t (
+  CONSTRAINT FK_HITO FOREIGN KEY (hito) references Hito,
+  CONSTRAINT FK_SERVICIO FOREIGN KEY (servicio) references Servicio
 );
 
-CREATE TABLE Subhito (
-  contiene  REF hito_t,
-  contenido REF hito_t,
-  CONSTRAINT FK_HITO_CONTIENE FOREIGN KEY (contiene) REFERENCES Hito,
-  CONSTRAINT FK_HITO_CONTENIDO FOREIGN KEY (contenido) REFERENCES Hito
+CREATE TABLE Subhito OF Subhito_t (
+  CONSTRAINT FK_Subhito_contiene FOREIGN KEY (contiene) references Hito,
+  CONSTRAINT FK_Subhito_contenido FOREIGN KEY (contenido) references Hito
 );
 
 CREATE TABLE Dirige OF dirige_t (
@@ -206,4 +221,3 @@ CREATE TABLE Conduce OF conduce_t (
   CONSTRAINT FK_CONDUCE_GUIA FOREIGN KEY (guia) REFERENCES Guia,
   CONSTRAINT FK_CONDUCE_TURISTA FOREIGN KEY (turista) REFERENCES Turista,
   CONSTRAINT FK_CONDUCE_RUTA FOREIGN KEY (ruta) REFERENCES Ruta
-);
