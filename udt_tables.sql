@@ -144,6 +144,16 @@ EXCEPTION
 END;
 /
 
+BEGIN
+    EXECUTE IMMEDIATE 'DROP TABLE Costo';
+EXCEPTION
+    WHEN OTHERS THEN
+      IF SQLCODE != -942 THEN
+         RAISE;
+      END IF;
+END;
+/
+
 -- Tabla Turista de objetos de tipo turista_t
 -- Contiene NESTED TABLE correspondiente a
 --    coleccion de hitos preferidos por el turista
@@ -268,4 +278,10 @@ CREATE TABLE Conduce OF conduce_t (
 CREATE TABLE Compone OF compone_t (
   CONSTRAINT FK_COMPONE_HITO FOREIGN KEY (hito) REFERENCES Hito,
   CONSTRAINT FK_COMPONE_RUTA FOREIGN KEY (ruta) REFERENCES Ruta
+);
+
+-- Tabla NUEVA para tener una tabla de costos
+CREATE TABLE Costo of costo_t(
+  publico NOT NULL,
+  monto   NOT NULL
 );
