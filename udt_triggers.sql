@@ -40,6 +40,7 @@ CREATE OR REPLACE FUNCTION index_of(elem ruta_t, lista tabla_ruta_t) RETURN NUMB
 
     RETURN -1;
   END;
+/
 
 
 -- Mantener referencia de una ruta con respecto a sus hitos. deberia ser
@@ -95,5 +96,5 @@ BEGIN
     END FOR;
   END IF;
 END;
-
+/
 
