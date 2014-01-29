@@ -282,7 +282,7 @@ CREATE TABLE Conduce OF conduce_t (
 -- );
 
 CREATE TABLE Inverso_hito_ruta OF inverso_hito_ruta_t (
-  CONSTRAINT PK_Inverso_hito_ruta PRIMARY KEY (hito)
+  CONSTRAINT PK_Inverso_hito_ruta PRIMARY KEY (hito),
   CONSTRAINT FK_Inverso_hito_ruta FOREIGN KEY (hito) REFERENCES Hito
 ) NESTED TABLE rutas STORE AS Inverso_hito_ruta_rutas;
 
