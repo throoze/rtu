@@ -1,6 +1,7 @@
 --Hacer null la ref(turista) de las Rutas cuyo ref(turista) sea igual al turista a eliminar.
 CREATE OR REPLACE TRIGGER eliminar_referencias_turista
 BEFORE DELETE ON TURISTA
+FOR EACH ROW
 DECLARE
     CURSOR rutas IS
         SELECT *
