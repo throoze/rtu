@@ -36,7 +36,7 @@ INSERT INTO Turista VALUES('Si','Perez','contrasena',SYSDATE, 'Hombre', 'correo@
 							'pedrito');
 SELECT REF(t) INTO tu_r FROM Turista t WHERE username='pedrito';
 SELECT REF(h) bulk collect into th FROM Hito h;
-INSERT INTO Ruta VALUES (SYSDATE, 'Conoce la Simon', tabla_tipoHito_t('Academico','Cultural'),tu_r,th);
+INSERT INTO Ruta (fechaRegistro, nombre, tipo, creador, hitos) VALUES (SYSDATE, 'Conoce la Simon', tabla_tipoHito_t('Academico','Cultural'),tu_r,th);
 
 SELECT REF(c) bulk collect into ct FROM Costo c;
 SELECT REF(i) bulk collect into it FROM Informacion i;
