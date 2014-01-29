@@ -8,7 +8,7 @@
 # The FILE_TO_CHECK-parameter specifies the file we want to monitor
 # changes
 PROJECT_DIR=/home/victor/projects/rtu
-FILE_TO_CHECK=udt_types.sql
+FILE_TO_CHECK=udt_bodies.sql
 MD5FILE=/tmp/$FILE_TO_CHECK.md5savefile
 LDC_USER=05-38087
 COMMAND="scp $FILE_TO_CHECK $LDC_USER@serena.ldc.usb.ve:~/projects/rtu/"
