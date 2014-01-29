@@ -29,6 +29,7 @@ DROP TYPE lista_dias_t FORCE;
 DROP TYPE tabla_informacion_t FORCE;
 DROP TYPE informacion_t FORCE;
 DROP TYPE tabla_costo_t FORCE;
+DROP TYPE lista_costos_t FORCE;
 DROP TYPE costo_t FORCE;
 DROP TYPE destino_t FORCE;
 DROP TYPE tabla_guia_t FORCE;
@@ -102,6 +103,9 @@ CREATE OR REPLACE TYPE costo_t AS OBJECT (
 CREATE OR REPLACE TYPE tabla_costo_t AS TABLE of REF costo_t;
 /
 
+-- Tipo para manejar una coleccion de referencias a costos
+CREATE OR REPLACE TYPE lista_costos_t AS TABLE of costo_t;
+/
 -- Tipo objeto para manejo de informacion de servicios
 CREATE OR REPLACE TYPE informacion_t AS OBJECT (
   tipo      VARCHAR2(20),
