@@ -208,7 +208,7 @@ CREATE OR REPLACE TYPE inverso_hito_ruta_t AS OBJECT (
   hito          REF hito_t,
   rutas         tabla_ruta_t
 );
-
+/
 
 -- Tipo objeto de la asociación dirige entre
 -- guias y rutas
