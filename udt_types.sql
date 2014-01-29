@@ -23,6 +23,7 @@ DROP TYPE dirige_t FORCE;
 DROP TYPE tabla_ruta_t FORCE;
 DROP TYPE ruta_t FORCE;
 DROP TYPE hito_t FORCE;
+DROP TYPE tabla_servicios_t FORCE;
 DROP TYPE servicio_t FORCE;
 DROP TYPE tabla_tipoServicio_t FORCE;
 DROP TYPE lista_dias_t FORCE;
@@ -138,6 +139,10 @@ CREATE OR REPLACE TYPE servicio_t UNDER destino_t (
   fechaFin            DATE,
   horaComienzo        DATE
 );
+/
+
+-- Tipo para manejar una colección de servicios
+CREATE OR REPLACE TYPE tabla_servicios_t AS TABLE of REF servicio_t;
 /
 
 -- Tipo para hito, hereda del tipo destino
@@ -276,3 +281,6 @@ ALTER TYPE ruta_t ADD MEMBER FUNCTION obtenerHitos RETURN tabla_compone_t CASCAD
 
 -- Método que devuelve todas las Rutas de las cuales forma parte este Hito.
 ALTER TYPE hito_t ADD MEMBER FUNCTION obtenerRutas RETURN tabla_compone_t CASCADE;
+
+-- Método que devuelve todos los Servicios ofrecidos en esta ruta esta ruta.
+ALTER TYPE ruta_t ADD MEMBER FUNCTION obtenerServicios RETURN tabla_compone_t CASCADE;
