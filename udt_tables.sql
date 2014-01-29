@@ -247,8 +247,7 @@ CREATE TABLE Ruta OF ruta_t (
   fechaRegistro       NOT NULL,
   nombre              NOT NULL,
   CONSTRAINT PK_RUTA PRIMARY KEY (nombre),
-  CONSTRAINT C_RUTA_FECHA_REGISTRO CHECK (nombre LIKE '^[a-zA-Z]{1,20}')     --String valido
-
+  CONSTRAINT C_RUTA_FECHA_REGISTRO CHECK (nombre LIKE '^[a-zA-Z]{1,20}')
 ) OBJECT ID PRIMARY KEY
   NESTED TABLE tipo STORE AS ruta_tipoHito
   NESTED TABLE hitos STORE AS ruta_to_hitos;
