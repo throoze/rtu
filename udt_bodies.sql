@@ -77,7 +77,7 @@ CREATE TYPE BODY ruta_t AS
   BEGIN
     FOR h IN hitos.FIRST.. hitos.LAST
     LOOP
-      SELECT deref(servicio) BULK COLLECT INTO servicios FROM Ofrece WHERE hito = deref(hitos(h));
+      SELECT deref(servicio) BULK COLLECT INTO servicios FROM Ofrece o WHERE o.hito = hitos(h);
     END LOOP;
 
     RETURN servicios;
