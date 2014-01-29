@@ -283,5 +283,6 @@ CREATE TABLE Compone OF compone_t (
 -- Tabla NUEVA para tener una tabla de costos
 CREATE TABLE Costo of costo_t(
   publico NOT NULL,
-  monto   NOT NULL
+  monto   NOT NULL,
+  CONSTRAINT PK_COSTO PRIMARY KEY (publico, monto)
 );
