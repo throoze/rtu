@@ -28,15 +28,25 @@ BEGIN
 END;
 /
 
+
+-- Compara dos rutas
+CREATE OR REPLACE FUNCTION rutas_iguales(x ruta_t, y ruta_t) RETURN BOOLEAN IS
+  BEGIN
+    RETURN (x.fechaRegistro = y.fechaRegistro AND x.nombre = y.nombre);
+  END;
+/
+
 -- Función que devuelve el primer índice de un elemento, en caso de existir en
 -- una tabla de rutas. En caso contrario devuelve -1
 CREATE OR REPLACE FUNCTION index_of(elem ruta_t, lista tabla_ruta_t) RETURN NUMBER IS
-    e REF ruta_t;
+    r REF ruta_t;
+    e ruta_t;
   BEGIN
-    FOR i IN lista.FIRST.. lista.LAST
+    FOR i IN 1.. lista.COUNT
     LOOP
-      e := lista(i);
-      IF (e = elem) THEN
+      r := lista(i);
+      SELECT deref(r) INTO e FROM DUAL;
+      IF (rutas_iguales(e, elem)) THEN
         RETURN i;
       END IF;
     END LOOP;
@@ -51,52 +61,51 @@ CREATE OR REPLACE FUNCTION index_of(elem ruta_t, lista tabla_ruta_t) RETURN NUMB
 -- un lado y del otro y haya que mantenerlos.
 CREATE OR REPLACE TRIGGER mantener_refs_hito_a_ruta
 AFTER INSERT OR UPDATE OR DELETE ON Ruta
-REFERENCING OLD AS old NEW AS new
 FOR EACH ROW
 DECLARE
-  exists NUMBER;
-  index NUMBER;
+  existence NUMBER;
+  ind NUMBER;
   rutas  tabla_ruta_t;
 BEGIN
   IF INSERTING THEN
-    FOR hito in new.hitos LOOP
-      SELECT COUNT(1) INTO exists FROM Inverso_hito_ruta i WHERE deref(i.hito) = deref(hito);
-      IF (exists = 1) THEN
-        SELECT i.rutas INTO rutas FROM Inverso_hito_ruta i WHERE deref(i.hito) = deref(hito);
-        rutas(rutas.COUNT) := REF(new);
-        UPDATE Inverso_hito_ruta i SET i.rutas = rutas WHERE deref(i.hito) = deref(hito);
+    FOR h in 1.. :NEW.hitos.COUNT LOOP
+      SELECT COUNT(1) INTO existence FROM Inverso_hito_ruta i WHERE deref(i.hito) = deref(:NEW.hitos(h));
+      IF (existence = 1) THEN
+        SELECT i.rutas INTO rutas FROM Inverso_hito_ruta i WHERE deref(i.hito) = deref(:NEW.hitos(h));
+        rutas(rutas.COUNT) := REF(:NEW);
+        UPDATE Inverso_hito_ruta i SET i.rutas = rutas WHERE deref(i.hito) = deref(:NEW.hitos(h));
       ELSE
-        INSERT INTO Inverso_hito_ruta i (hito, rutas) VALUES (hito, tabla_ruta_t(REF(new)));
+        INSERT INTO Inverso_hito_ruta i (hito, rutas) VALUES (:NEW.hitos(h), tabla_ruta_t(REF(:NEW)));
       END IF;
-    END FOR;
+    END LOOP;
   ELSIF DELETING THEN
-    FOR hito in old.hitos LOOP
-      SELECT i.rutas INTO rutas FROM Inverso_hito_ruta i WHERE deref(i.hito) = deref(hito)
-      index = index_of(new, rutas);
-      IF index > -1 THEN
-        rutas.DELETE(index)
-        UPDATE Inverso_hito_ruta i SET i.rutas = rutas WHERE deref(i.hito) = deref(hito);
+    FOR h in 1.. :OLD.hitos.COUNT LOOP
+      SELECT i.rutas INTO rutas FROM Inverso_hito_ruta i WHERE deref(i.hito) = deref(old.hitos(h))
+      ind = index_of(new, rutas);
+      IF ind > -1 THEN
+        rutas.DELETE(ind);
+        UPDATE Inverso_hito_ruta i SET i.rutas = rutas WHERE deref(i.hito) = deref(old.hitos(h));
       END IF;
-    END FOR;
+    END LOOP;
   ELSIF UPDATING('hitos') THEN
-    FOR hito in old.hitos LOOP
-      SELECT i.rutas INTO rutas FROM Inverso_hito_ruta i WHERE deref(i.hito) = deref(hito)
-      index = index_of(new, rutas);
-      IF index > -1 THEN
-        rutas.DELETE(index)
-        UPDATE Inverso_hito_ruta i SET i.rutas = rutas WHERE deref(i.hito) = deref(hito);
+   FOR h in 1.. :OLD.hitos.COUNT LOOP
+      SELECT i.rutas INTO rutas FROM Inverso_hito_ruta i WHERE deref(i.hito) = deref(old.hitos(h))
+      ind = index_of(new, rutas);
+      IF ind > -1 THEN
+        rutas.DELETE(ind);
+        UPDATE Inverso_hito_ruta i SET i.rutas = rutas WHERE deref(i.hito) = deref(old.hitos(h));
       END IF;
-    END FOR;
-    FOR hito in new.hitos LOOP
-      SELECT COUNT(1) INTO exists FROM Inverso_hito_ruta i WHERE deref(i.hito) = deref(hito);
-      IF (exists = 1) THEN
-        SELECT i.rutas INTO rutas FROM Inverso_hito_ruta i WHERE deref(i.hito) = deref(hito);
+    END LOOP;
+    FOR h in 1.. :NEW.hitos.COUNT LOOP
+      SELECT COUNT(1) INTO existence FROM Inverso_hito_ruta i WHERE deref(i.hito) = deref(new.hitos(h));
+      IF (existence = 1) THEN
+        SELECT i.rutas INTO rutas FROM Inverso_hito_ruta i WHERE deref(i.hito) = deref(new.hitos(h));
         rutas(rutas.COUNT) := REF(new);
-        UPDATE Inverso_hito_ruta i SET i.rutas = rutas WHERE deref(i.hito) = deref(hito);
+        UPDATE Inverso_hito_ruta i SET i.rutas = rutas WHERE deref(i.hito) = deref(new.hitos(h));
       ELSE
-        INSERT INTO Inverso_hito_ruta i (hito, rutas) VALUES (hito, tabla_ruta_t(REF(new)));
+        INSERT INTO Inverso_hito_ruta i (hito, rutas) VALUES (new.hitos(h), tabla_ruta_t(REF(new)));
       END IF;
-    END FOR;
+    END LOOP;
   END IF;
 END;
 /
