@@ -28,6 +28,9 @@ BEGIN
 END;
 /
 
+DROP FUNCTION index_of;
+DROP FUNCTION rutas_iguales;
+
 
 -- Compara dos rutas
 CREATE OR REPLACE FUNCTION rutas_iguales(x ruta_t, y ruta_t) RETURN BOOLEAN IS

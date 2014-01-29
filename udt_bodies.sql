@@ -23,6 +23,8 @@ CREATE GLOBAL TEMPORARY TABLE listaDeCostos (
   monto   NUMBER
 );
 
+DROP PROCEDURE nuevoHito;
+
 CREATE OR REPLACE PROCEDURE nuevoHito(descripcion IN VARCHAR2,
                                       nombre IN VARCHAR2,
                                       categorias IN tabla_tipoHito_t,

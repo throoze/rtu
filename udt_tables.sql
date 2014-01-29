@@ -252,6 +252,8 @@ CREATE TABLE Ruta OF ruta_t (
   NESTED TABLE tipo STORE AS ruta_tipoHito
   NESTED TABLE hitos STORE AS ruta_to_hitos;
 
+ALTER TABLE Ruta ADD SCOPE FOR (creador) IS Turista;
+
 -- Tabla Guia de objetos de tipo guia_t
 -- Contiene NESTED TABLE correspondiente a coleccion de:
 --    tipo de hitos que prefiere el guia
