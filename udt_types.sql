@@ -265,8 +265,8 @@ CREATE OR REPLACE TYPE ofrece_t AS OBJECT (
 -- /
 
 -- Colección de instancias de la relación conduce:
-CREATE OR REPLACE TYPE tabla_compone_t AS TABLE of REF compone_t;
-/
+-- CREATE OR REPLACE TYPE tabla_compone_t AS TABLE of REF compone_t;
+-- /
 
 -- A continuación se especican más métodos que requieren de la pre existencia de algunos tipos para compilar correctamente:
 
