@@ -284,5 +284,5 @@ CREATE TABLE Compone OF compone_t (
 CREATE TABLE Costo of costo_t(
   publico NOT NULL,
   monto   NOT NULL,
-  CONSTRAINT PK_RUTA PRIMARY KEY (publico,monto),
+  CONSTRAINT PK_COSTO PRIMARY KEY (publico, monto)
 );
