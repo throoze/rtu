@@ -9,13 +9,9 @@ ALTER TYPE ruta_t ADD MEMBER FUNCTION obtenerServicios RETURN tabla_compone_t CA
 
 CREATE TYPE BODY ruta_t AS
   MEMBER FUNCTION obtenerHitos RETURN tabla_hito_t IS
-    CURSOR hitos IS
-        SELECT hito
-        FROM compone_t
-        WHERE ruta = SELF;
-    ans tabla_hito_t;
+    hitos tabla_hito_t;
   BEGIN
-    FOR hito in hitos LOOP
-       INSERT INTO ans ()
+    SELECT hito INTO hitos FROM Compone WHERE ruta = SELF;
+    RETURN hitos;
   END;
 END;
