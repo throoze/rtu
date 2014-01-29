@@ -34,8 +34,7 @@ hito_t.crearHito('Biblioteca de la USB',
 
 INSERT INTO Turista VALUES('Si','Perez','contrasena',SYSDATE, 'Hombre', 'correo@correo.com', tabla_tipoHito_t('Academico'), 'Pedro',
 							'pedrito');
-SELECT VALUE(t) into tu_c FROM Turista t WHERE username='pedrito';
-SELECT REF(tu_c) INTO tu_r FROM DUAL;
+SELECT REF(t) INTO tu_r FROM Turista t WHERE username='pedrito';
 SELECT REF(h) bulk collect into th FROM Hito h;
 INSERT INTO Ruta VALUES (SYSDATE, 'Conoce la Simon', tabla_tipoHito_t('Academico','Cultural'),tu_r,th);
 
