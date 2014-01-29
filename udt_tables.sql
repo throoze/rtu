@@ -281,6 +281,11 @@ CREATE TABLE Conduce OF conduce_t (
 --   CONSTRAINT FK_COMPONE_RUTA FOREIGN KEY (ruta) REFERENCES Ruta
 -- );
 
+CREATE TABLE Inverso_hito_ruta OF inverso_hito_ruta_t (
+  CONSTRAINT PK_Inverso_hito_ruta PRIMARY KEY (hito)
+  CONSTRAINT FK_Inverso_hito_ruta FOREIGN KEY (hito) REFERENCES Hito
+) NESTED TABLE rutas STORE AS Inverso_hito_ruta_rutas;
+
 -- Tabla NUEVA para tener una tabla de costos
 CREATE TABLE Costo of costo_t(
   publico NOT NULL,

@@ -199,10 +199,15 @@ CREATE OR REPLACE TYPE ruta_t AS OBJECT (
 
 --Tipo que es una tabla de referencias a rutas para ser usado en 
 --la operacion buscarRutas()
-CREATE OR REPLACE TYPE tabla_ruta_t AS TABLE of ruta_t;
+CREATE OR REPLACE TYPE tabla_ruta_t AS TABLE of REF ruta_t;
 /
 
-ALTER TYPE hito_t ADD ATTRIBUTE (rutas tabla_ruta_t);
+-- Tipo agregado apra que haga falta mantener la referencia inversa entre un
+-- hito y sus rutas
+CREATE OR REPLACE TYPE inverso_hito_ruta_t AS OBJECT (
+  hito          REF hito_t,
+  rutas         tabla_ruta_t
+);
 
 
 -- Tipo objeto de la asociación dirige entre
