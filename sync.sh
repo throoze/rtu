@@ -8,7 +8,7 @@
 # The FILE_TO_CHECK-parameter specifies the file we want to monitor
 # changes
 PROJECT_DIR=/home/victor/projects/rtu
-FILE_TO_CHECK=hitoCreate.sql
+FILE_TO_CHECK=udt_types.sql
 MD5FILE=/tmp/$FILE_TO_CHECK.md5savefile
 LDC_USER=05-38087
 COMMAND="scp $FILE_TO_CHECK $LDC_USER@serena.ldc.usb.ve:~/projects/rtu/"
@@ -72,13 +72,14 @@ do
             fi
             echo "Cambio detectado." 
             # espeak "New version detected, starting upload"  2> /dev/null
-            espeak "Brace yourself! winter is coming..."  2> /dev/null
+            espeak "Brace yourself!"  2> /dev/null
             date +%l:%M        
             $COMMAND 2> /dev/null
             if [ $? = 0 ]
             then
                 echo "File updated OK"
-                espeak "File updated at the LDC" 2> /dev/null
+                # espeak "File updated at the LDC" 2> /dev/null
+                espeak "Winter is coming..." 2> /dev/null
             else
                 espeak "There was a problem with the upload"
                 exit

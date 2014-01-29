@@ -22,8 +22,9 @@ DROP TYPE tabla_dirige_t FORCE;
 DROP TYPE dirige_t FORCE;
 DROP TYPE tabla_ruta_t FORCE;
 DROP TYPE ruta_t FORCE;
+DROP TYPE tabla_hito_t FORCE;
 DROP TYPE hito_t FORCE;
-DROP TYPE tabla_servicios_t FORCE;
+DROP TYPE tabla_servicio_t FORCE;
 DROP TYPE servicio_t FORCE;
 DROP TYPE tabla_tipoServicio_t FORCE;
 DROP TYPE lista_dias_t FORCE;
@@ -142,7 +143,7 @@ CREATE OR REPLACE TYPE servicio_t UNDER destino_t (
 /
 
 -- Tipo para manejar una colección de servicios
-CREATE OR REPLACE TYPE tabla_servicios_t AS TABLE of REF servicio_t;
+CREATE OR REPLACE TYPE tabla_servicio_t AS TABLE of REF servicio_t;
 /
 
 -- Tipo para hito, hereda del tipo destino
@@ -155,6 +156,12 @@ CREATE OR REPLACE TYPE hito_t UNDER destino_t (
   vestimenta  VARCHAR2(30)
 );
 /
+
+--Tipo que representa una colección de referencias a hitos para ser usado en 
+--la operacion obtenerHitos()
+CREATE OR REPLACE TYPE tabla_hito_t AS TABLE of REF hito_t;
+/
+
 
 -- Tipo objeto para ruta
 CREATE OR REPLACE TYPE ruta_t AS OBJECT (
@@ -275,12 +282,3 @@ ALTER TYPE guia_t ADD MEMBER FUNCTION rutasPorFecha(f IN DATE) RETURN tabla_cond
 
 -- Devuelve todas las rutas guiadas para un turista dado, junto a la fecha y hora asociada.
 ALTER TYPE guia_t ADD MEMBER FUNCTION rutasPorTurista(r IN turista_t) RETURN tabla_conduce_t CASCADE;
-
--- Método que devuelve todos los Hitos que componen esta ruta.
-ALTER TYPE ruta_t ADD MEMBER FUNCTION obtenerHitos RETURN tabla_compone_t CASCADE;
-
--- Método que devuelve todas las Rutas de las cuales forma parte este Hito.
-ALTER TYPE hito_t ADD MEMBER FUNCTION obtenerRutas RETURN tabla_compone_t CASCADE;
-
--- Método que devuelve todos los Servicios ofrecidos en esta ruta esta ruta.
-ALTER TYPE ruta_t ADD MEMBER FUNCTION obtenerServicios RETURN tabla_compone_t CASCADE;

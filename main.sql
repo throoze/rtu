@@ -14,4 +14,5 @@
  -- Main
 
 @udt_types.sql
+@udt_bodies.sql
 @udt_tables.sql
