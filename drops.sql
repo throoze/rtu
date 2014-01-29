@@ -7,6 +7,7 @@ DROP TYPE tabla_conduce_t FORCE;
 DROP TYPE conduce_t FORCE;
 DROP TYPE tabla_dirige_t FORCE;
 DROP TYPE dirige_t FORCE;
+DROP TYPE inverso_hito_ruta_t FORCE;
 DROP TYPE tabla_ruta_t FORCE;
 DROP TYPE ruta_t FORCE;
 DROP TYPE tabla_hito_t FORCE;

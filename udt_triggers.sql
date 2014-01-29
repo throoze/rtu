@@ -4,17 +4,17 @@ BEFORE DELETE ON TURISTA
 FOR EACH ROW
 DECLARE
     CURSOR rutas IS
-        SELECT *
-        FROM Ruta r
-        WHERE r.creador.username == :OLD.username;
+        SELECT VALUE(r)
+        FROM RUTA r
+        WHERE r.creador.username = :OLD.username;
     CURSOR conducidos IS
-        SELECT *
-        FROM Conduce c
-        WHERE c.turitsa.username == :OLD.username;
+        SELECT VALUE(c)
+        FROM CONDUCE c
+        WHERE c.turista.username = :OLD.username;
     CURSOR guias IS
-        SELECT *
-        FROM Guia g
-        WHERE g.username == :OLD.username;
+        SELECT VALUE(g)
+        FROM GUIA g
+        WHERE g.username = :OLD.username;
 BEGIN
     FOR r in rutas LOOP
         r.creador := NULL;
@@ -31,11 +31,14 @@ END;
 -- Función que devuelve el primer índice de un elemento, en caso de existir en
 -- una tabla de rutas. En caso contrario devuelve -1
 CREATE OR REPLACE FUNCTION index_of(elem ruta_t, lista tabla_ruta_t) RETURN NUMBER IS
+    e REF ruta_t;
   BEGIN
     FOR i IN lista.FIRST.. lista.LAST
     LOOP
-      IF deref(lista(i)) = elem THEN
-      RETURN i;
+      e := lista(i);
+      IF (e = elem) THEN
+        RETURN i;
+      END IF;
     END LOOP;
 
     RETURN -1;
@@ -46,7 +49,7 @@ CREATE OR REPLACE FUNCTION index_of(elem ruta_t, lista tabla_ruta_t) RETURN NUMB
 -- Mantener referencia de una ruta con respecto a sus hitos. deberia ser
 -- mantener inversas, deben cambiar algo el script para que tenga los refs de
 -- un lado y del otro y haya que mantenerlos.
-CREATE OR REPLACE TRIGGER mantener_referencias_de_hito_hacia_ruta
+CREATE OR REPLACE TRIGGER mantener_refs_hito_a_ruta
 AFTER INSERT OR UPDATE OR DELETE ON Ruta
 REFERENCING OLD AS old NEW AS new
 FOR EACH ROW
