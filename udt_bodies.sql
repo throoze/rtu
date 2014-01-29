@@ -66,17 +66,21 @@ CREATE TYPE BODY ruta_t AS
 
   -- Método que devuelve todos los Hitos que componen esta ruta.
   MEMBER FUNCTION obtenerHitos RETURN tabla_hito_t IS
-    hitos tabla_hito_t;
   BEGIN
-    SELECT hito BULK COLLECT INTO hitos FROM Compone WHERE deref(ruta) = SELF;
-    RETURN hitos;
+    RETURN SELF.hitos;
   END;
 
   -- Método que devuelve todos los Servicios ofrecidos en esta ruta esta ruta.
   MEMBER FUNCTION obtenerServicios RETURN tabla_servicio_t IS
-    s tabla_servicio_t;
+    servicios tabla_servicio_t;
+    hitos tabla_hito_t := SELF.obtenerHitos(); 
   BEGIN
-    RETURN s;
+    FOR h IN hitos.FIRST.. hitos.LAST
+    LOOP
+      SELECT deref(servicio) BULK COLLECT INTO servicios FROM Ofrece WHERE hito = hitos(h);
+    END LOOP;
+
+    RETURN servicios;
   END;
 END;
 /

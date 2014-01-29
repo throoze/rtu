@@ -229,7 +229,8 @@ CREATE TABLE Ruta OF ruta_t (
   CONSTRAINT PK_RUTA PRIMARY KEY (nombre),
   CONSTRAINT C_RUTA_FECHA_REGISTRO CHECK (nombre LIKE '^[a-zA-Z]{1,20}')     --String valido
 ) OBJECT ID PRIMARY KEY
-  NESTED TABLE tipo STORE AS ruta_tipoHito;
+  NESTED TABLE tipo STORE AS ruta_tipoHito
+  NESTED TABLE hitos STORE AS ruta_hitos;
 
 -- Tabla Guia de objetos de tipo guia_t
 -- Contiene NESTED TABLE correspondiente a coleccion de:
@@ -275,10 +276,10 @@ CREATE TABLE Conduce OF conduce_t (
 );
 
 -- Tabla que maneja la relación N:M "compone" entre Hito y Ruta.
-CREATE TABLE Compone OF compone_t (
-  CONSTRAINT FK_COMPONE_HITO FOREIGN KEY (hito) REFERENCES Hito,
-  CONSTRAINT FK_COMPONE_RUTA FOREIGN KEY (ruta) REFERENCES Ruta
-);
+-- CREATE TABLE Compone OF compone_t (
+--   CONSTRAINT FK_COMPONE_HITO FOREIGN KEY (hito) REFERENCES Hito,
+--   CONSTRAINT FK_COMPONE_RUTA FOREIGN KEY (ruta) REFERENCES Ruta
+-- );
 
 -- Tabla NUEVA para tener una tabla de costos
 CREATE TABLE Costo of costo_t(

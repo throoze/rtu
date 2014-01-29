@@ -159,7 +159,7 @@ CREATE OR REPLACE TYPE hito_t UNDER destino_t (
 
 --Tipo que representa una colección de referencias a hitos para ser usado en 
 --la operacion obtenerHitos()
-CREATE OR REPLACE TYPE tabla_hito_t AS TABLE of REF hito_t;
+CREATE OR REPLACE TYPE tabla_hito_t AS TABLE of hito_t;
 /
 
 
@@ -169,6 +169,7 @@ CREATE OR REPLACE TYPE ruta_t AS OBJECT (
   nombre         VARCHAR2(30),
   tipo           tabla_tipoHito_t,
   creador        REF turista_t,
+  hitos          tabla_hito_t,
   
   --Método que calcula el costo total, dada la lista de costos del Guía y la lista de costos de los hitos.
   MEMBER FUNCTION calcularCostoTotal(costosGuia IN tabla_costo_t, costoHito IN tabla_costo_t) RETURN NUMBER,
@@ -198,8 +199,11 @@ CREATE OR REPLACE TYPE ruta_t AS OBJECT (
 
 --Tipo que es una tabla de referencias a rutas para ser usado en 
 --la operacion buscarRutas()
-CREATE OR REPLACE TYPE tabla_ruta_t AS TABLE of REF ruta_t;
+CREATE OR REPLACE TYPE tabla_ruta_t AS TABLE of ruta_t;
 /
+
+ALTER TYPE hito_t ADD ATTRIBUTE (rutas tabla_ruta_t);
+
 
 -- Tipo objeto de la asociación dirige entre
 -- guias y rutas
@@ -249,11 +253,11 @@ CREATE OR REPLACE TYPE ofrece_t AS OBJECT (
 
 -- Tipo objeto de la asociación "compone" entre hito y ruta
 -- Uno o muchos hitos componen una o muchas rutas.
-CREATE OR REPLACE TYPE compone_t AS OBJECT (
-  hito      REF hito_t,
-  ruta      REF ruta_t
-);
-/
+-- CREATE OR REPLACE TYPE compone_t AS OBJECT (
+--   hito      REF hito_t,
+--   ruta      REF ruta_t
+-- );
+-- /
 
 -- Colección de instancias de la relación conduce:
 CREATE OR REPLACE TYPE tabla_compone_t AS TABLE of REF compone_t;
