@@ -127,7 +127,7 @@ CREATE OR REPLACE TYPE lista_dias_t AS VARRAY(7) of VARCHAR2(10);
 
 -- Tipo para manejar una coleccion de tipos de servicios
 CREATE OR REPLACE TYPE tabla_tipoServicio_t AS TABLE of VARCHAR2(20);
-/
+/ 
 
 -- Tipo para servicio, hereda del tipo destino
 CREATE OR REPLACE TYPE servicio_t UNDER destino_t (

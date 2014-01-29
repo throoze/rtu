@@ -164,6 +164,16 @@ EXCEPTION
 END;
 /
 
+BEGIN
+    EXECUTE IMMEDIATE 'DROP TABLE Informacion';
+EXCEPTION
+    WHEN OTHERS THEN
+      IF SQLCODE != -942 THEN
+         RAISE;
+      END IF;
+END;
+/
+
 -- Tabla Turista de objetos de tipo turista_t
 -- Contiene NESTED TABLE correspondiente a
 --    coleccion de hitos preferidos por el turista
@@ -177,13 +187,13 @@ CREATE TABLE Turista OF turista_t (
   nombre              NOT NULL,
   username            NOT NULL,
   CONSTRAINT PK_TURISTA PRIMARY KEY (username),
-  CONSTRAINT C_TURISTA_APELLIDO CHECK (apellido LIKE '^[a-zA-Z]{1,20}'),                  --String valido
-  CONSTRAINT C_TURISTA_CONTRASENA CHECK (contrasena LIKE '^[a-zA-Z]{1,8}'),               --String valido
+  --CONSTRAINT C_TURISTA_APELLIDO CHECK (apellido LIKE '^[a-zA-Z]{1,20}'),                  --String valido
+  --CONSTRAINT C_TURISTA_CONTRASENA CHECK (contrasena LIKE '^[a-zA-Z]{1,8}'),               --String valido
   -- CONSTRAINT C_TURISTA_ CHECK (fechaRegistro <= (SELECT CURRENT_DATE FROM dual)),      --fechaRegistro menor o igual que fecha actual
-  CONSTRAINT C_TURISTA_GENERO CHECK (genero IN ('Hombre', 'Mujer')),                   
-  CONSTRAINT C_TURISTA_MAIL CHECK (mail LIKE '([\w-\.]+)@((?:[\w]+\.)+)([a-zA-Z]{2,4})'), --Mail valido
-  CONSTRAINT C_TURISTA_NOMBRE CHECK (nombre LIKE '^[a-zA-Z]{1,20}'),                      --String valido
-  CONSTRAINT C_TURISTA_USERNAME CHECK (username LIKE '^[a-zA-Z]{1,20}')                   --String valido
+  CONSTRAINT C_TURISTA_GENERO CHECK (genero IN ('Hombre', 'Mujer'))                   
+  --CONSTRAINT C_TURISTA_MAIL CHECK (mail LIKE '([\w-\.]+)@((?:[\w]+\.)+)([a-zA-Z]{2,4})'), --Mail valido
+  --CONSTRAINT C_TURISTA_NOMBRE CHECK (nombre LIKE '^[a-zA-Z]{1,20}')                      --String valido
+  --CONSTRAINT C_TURISTA_USERNAME CHECK (username LIKE '^[a-zA-Z]{1,20}')                   --String valido
 ) OBJECT ID PRIMARY KEY
   NESTED TABLE tipoHitosPreferidos STORE AS turista_hitos;
 
@@ -300,4 +310,11 @@ CREATE TABLE Costo of costo_t(
   publico NOT NULL,
   monto   NOT NULL,
   CONSTRAINT PK_COSTO PRIMARY KEY (publico, monto)
+);
+
+-- Tabla NUEVA para tener una tabla de costos
+CREATE TABLE Informacion of informacion_t(
+  tipo NOT NULL,
+  contacto   NOT NULL,
+  CONSTRAINT PK_Informacion PRIMARY KEY (tipo,contacto)
 );

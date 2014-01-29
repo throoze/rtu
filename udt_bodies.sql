@@ -7,6 +7,65 @@ ALTER TYPE hito_t ADD MEMBER FUNCTION obtenerRutas RETURN tabla_ruta_t CASCADE;
 -- Método que devuelve todos los Servicios ofrecidos en esta ruta esta ruta.
 ALTER TYPE ruta_t ADD MEMBER FUNCTION obtenerServicios RETURN tabla_servicio_t CASCADE;
 
+ALTER TYPE hito_t ADD STATIC PROCEDURE crearHito(descripcion IN VARCHAR2,
+                                      nombre IN VARCHAR2,
+                                      categorias IN tabla_tipoHito_t,
+                                      estado IN VARCHAR2,
+                                      cost IN lista_costos_t,
+                                      publico IN VARCHAR2,
+                                      temperatura IN NUMBER,
+                                      vestimenta IN VARCHAR2) CASCADE;
+
+DROP TABLE listaDeCostos;
+
+CREATE GLOBAL TEMPORARY TABLE listaDeCostos (
+  publico VARCHAR2(20),
+  monto   NUMBER
+);
+
+CREATE OR REPLACE PROCEDURE nuevoHito(descripcion IN VARCHAR2,
+                                      nombre IN VARCHAR2,
+                                      categorias IN tabla_tipoHito_t,
+                                      estado IN VARCHAR2,
+                                      cost IN lista_costos_t,
+                                      publico IN VARCHAR2,
+                                      temperatura IN NUMBER,
+                                      vestimenta IN VARCHAR2) AS
+tabla_de_costos tabla_costo_t;
+BEGIN
+  FOR i IN cost.FIRST..cost.LAST
+  LOOP
+    INSERT INTO listaDeCostos VALUES (cost(i).publico,cost(i).monto);
+  END LOOP;
+
+  SELECT REF(c) bulk collect into tabla_de_costos FROM Costo c, listaDeCostos l
+     WHERE c.publico = l.publico AND c.monto = l.monto;
+
+INSERT INTO Hito VALUES (descripcion,nombre,categorias,estado,tabla_de_costos,publico,temperatura,vestimenta);
+END nuevoHito;
+/
+
+CREATE TYPE BODY hito_t AS
+  MEMBER FUNCTION obtenerRutas RETURN tabla_ruta_t IS
+    r tabla_ruta_t;
+  BEGIN
+    RETURN r;
+  END; 
+
+  STATIC PROCEDURE crearHito(descripcion IN VARCHAR2,
+                                      nombre IN VARCHAR2,
+                                      categorias IN tabla_tipoHito_t,
+                                      estado IN VARCHAR2,
+                                      cost IN lista_costos_t,
+                                      publico IN VARCHAR2,
+                                      temperatura IN NUMBER,
+                                      vestimenta IN VARCHAR2) IS 
+  BEGIN
+    nuevoHito(descripcion,nombre,categorias,estado,cost,publico,temperatura,vestimenta);
+  END;
+
+END;
+/
 CREATE TYPE BODY ruta_t AS
   --Método que calcula el costo total, dada la lista de costos del Guía y la lista de costos de los hitos.
   MEMBER FUNCTION calcularCostoTotal(costosGuia IN tabla_costo_t, costoHito IN tabla_costo_t) RETURN NUMBER IS
