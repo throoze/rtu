@@ -16,3 +16,4 @@
 @udt_types.sql
 @udt_tables.sql
 @udt_bodies.sql
+@udt_triggers.sql
