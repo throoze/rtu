@@ -5,7 +5,7 @@ ALTER TYPE ruta_t ADD MEMBER FUNCTION obtenerHitos RETURN tabla_hito_t CASCADE;
 ALTER TYPE hito_t ADD MEMBER FUNCTION obtenerRutas RETURN tabla_compone_t CASCADE;
 
 -- Método que devuelve todos los Servicios ofrecidos en esta ruta esta ruta.
-ALTER TYPE ruta_t ADD MEMBER FUNCTION obtenerServicios RETURN tabla_compone_t CASCADE;
+ALTER TYPE ruta_t ADD MEMBER FUNCTION obtenerServicios RETURN tabla_servicio_t CASCADE;
 
 CREATE TYPE BODY ruta_t AS
   --Método que calcula el costo total, dada la lista de costos del Guía y la lista de costos de los hitos.
@@ -68,15 +68,15 @@ CREATE TYPE BODY ruta_t AS
   MEMBER FUNCTION obtenerHitos RETURN tabla_hito_t IS
     hitos tabla_hito_t;
   BEGIN
-    SELECT hito INTO hitos FROM Compone WHERE ruta = ref(SELF);
+    SELECT hito BULK COLLECT INTO hitos FROM Compone WHERE deref(ruta) = SELF;
     RETURN hitos;
   END;
 
   -- Método que devuelve todos los Servicios ofrecidos en esta ruta esta ruta.
-  MEMBER FUNCTION obtenerServicios RETURN tabla_compone_t IS
-    c tabla_compone_t;
+  MEMBER FUNCTION obtenerServicios RETURN tabla_servicio_t IS
+    s tabla_servicio_t;
   BEGIN
-    RETURN c;
+    RETURN s;
   END;
 END;
 /

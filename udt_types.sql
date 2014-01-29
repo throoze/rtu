@@ -143,7 +143,7 @@ CREATE OR REPLACE TYPE servicio_t UNDER destino_t (
 /
 
 -- Tipo para manejar una colección de servicios
-CREATE OR REPLACE TYPE tabla_servicio_t AS TABLE of REF servicio_t;
+CREATE OR REPLACE TYPE tabla_servicio_t AS TABLE of servicio_t;
 /
 
 -- Tipo para hito, hereda del tipo destino
