@@ -230,7 +230,7 @@ CREATE TABLE Ruta OF ruta_t (
   CONSTRAINT C_RUTA_FECHA_REGISTRO CHECK (nombre LIKE '^[a-zA-Z]{1,20}')     --String valido
 ) OBJECT ID PRIMARY KEY
   NESTED TABLE tipo STORE AS ruta_tipoHito
-  NESTED TABLE hitos STORE AS ruta_hitos;
+  NESTED TABLE hitos STORE AS ruta_to_hitos;
 
 -- Tabla Guia de objetos de tipo guia_t
 -- Contiene NESTED TABLE correspondiente a coleccion de:

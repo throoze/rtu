@@ -12,8 +12,8 @@
  */
 
 -- DROP de tipos si existen
-DROP TYPE tabla_compone_t FORCE;
-DROP TYPE compone_t FORCE;
+-- DROP TYPE tabla_compone_t FORCE;
+-- DROP TYPE compone_t FORCE;
 DROP TYPE ofrece_t FORCE;
 DROP TYPE subhito_t FORCE;
 DROP TYPE tabla_conduce_t FORCE;
@@ -159,7 +159,7 @@ CREATE OR REPLACE TYPE hito_t UNDER destino_t (
 
 --Tipo que representa una colección de referencias a hitos para ser usado en 
 --la operacion obtenerHitos()
-CREATE OR REPLACE TYPE tabla_hito_t AS TABLE of hito_t;
+CREATE OR REPLACE TYPE tabla_hito_t AS TABLE of REF hito_t;
 /
 
 
