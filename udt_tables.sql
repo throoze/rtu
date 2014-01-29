@@ -246,7 +246,6 @@ CREATE TABLE Destino OF destino_t (
 CREATE TABLE Ruta OF ruta_t (
   fechaRegistro       NOT NULL,
   nombre              NOT NULL,
-  creador             NOT NULL,
   CONSTRAINT PK_RUTA PRIMARY KEY (nombre),
   CONSTRAINT C_RUTA_FECHA_REGISTRO CHECK (nombre LIKE '^[a-zA-Z]{1,20}'),
   CONSTRAINT FK_RUTA_HITO FOREIGN KEY (creador) REFERENCES Turista
